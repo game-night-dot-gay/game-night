@@ -6,7 +6,7 @@
 yay -Sy npm
 
 # Vue CLI
-npm install -g @vue/cli
+npm install -g @vue/cli 
 
 # http-server (For local prod testing)
 npm install --global http-server
