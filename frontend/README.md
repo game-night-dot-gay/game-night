@@ -40,5 +40,11 @@ npm run build && npx http-server dist
 npm run lint
 ```
 
+### Upgrade all dependencies
+```sh
+npx npm-check-updates -u 
+npm install
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
