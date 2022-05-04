@@ -16,14 +16,41 @@
         root = ./backend;
         doCheck = true;
       };
+
+      packages.game-night-frontend = pkgs.mkYarnPackage {
+        pname = "game-night-frontend";
+        src = ./frontend;
+
+        # Create a node modules folder that is writable based on the downloaded dependencies
+        configurePhase = ''
+          cp -r $node_modules node_modules
+          chmod -R 755 node_modules;
+        '';
+
+        # run the vue-cli-service build in offline mode to avoid pull dependencies
+        buildPhase = ''
+          yarn run --offline build
+        '';
+
+        # copy the built sources into the output folder
+        installPhase = ''
+          cp -r dist/  $out
+        '';
+
+        # do not attempt to build distribution bundles
+        distPhase = ''
+          true
+        '';
+      };
+
       defaultPackage = packages.game-night-backend;
 
       devShell = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
-          # general
+          # General
           just
 
-          # rust / backend
+          # Rust / Backend
           cargo
           cargo-edit
           cargo-outdated
@@ -31,6 +58,9 @@
           rustc
           rustfmt
           rust-analyzer
+
+          # TypeScript / Frontend
+          yarn
         ];
 
         RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
