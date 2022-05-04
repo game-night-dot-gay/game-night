@@ -43,6 +43,20 @@
         '';
       };
 
+      packages.docker = pkgs.dockerTools.buildLayeredImage {
+        name = "game-night";
+        tag = "0.1.0";
+        contents = [
+          pkgs.bash pkgs.coreutils
+        ];
+
+        config = {
+          Env = [ "VUE_BUNDLE=${packages.game-night-frontend}" ];
+          Cmd = [ "${packages.game-night-backend}/bin/game-night" ];
+          WorkingDir = "/app";
+        };
+      };
+
       defaultPackage = packages.game-night-backend;
 
       devShell = pkgs.mkShell {
