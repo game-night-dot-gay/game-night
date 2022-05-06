@@ -1,0 +1,21 @@
+name: "Nix Flake Tests"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  tests:
+    name: Nix Flake Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v17
+      with:
+        extra_nix_config: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    - run: nix build .#game-night-backend
+    - run: nix build .#game-night-frontend
+    - run: nix build .#docker
