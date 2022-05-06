@@ -50,3 +50,11 @@ Recommend `tfswitch` to manage Terraform version
 
 - Get rid of passwords and only use SSH keys
 - SSH don't allow password logins
+
+## Packer Notes
+
+- https://www.packer.io/plugins/builders/digitalocean
+- 
+
+1. `cd infra/images/podman-prod` and run `packer init image.pkr.hcl`
+2. 
