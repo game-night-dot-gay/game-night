@@ -1324,7 +1324,7 @@
   dependencies:
     "@types/node" "*"
 
-"@typescript-eslint/eslint-plugin@^5.0.0", "@typescript-eslint/eslint-plugin@^5.21.0":
+"@typescript-eslint/eslint-plugin@^5.0.0", "@typescript-eslint/eslint-plugin@^5.22.0":
   version "5.22.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-5.22.0.tgz#7b52a0de2e664044f28b36419210aea4ab619e2a"
   integrity sha512-YCiy5PUzpAeOPGQ7VSGDEY2NeYUV1B0swde2e0HzokRsHBYjSdF6DZ51OuRZxVPHx0032lXGLvOMls91D8FXlg==
