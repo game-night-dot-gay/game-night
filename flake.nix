@@ -51,13 +51,22 @@
         ];
 
         config = {
-          Env = [ "VUE_BUNDLE=${packages.game-night-frontend}" ];
+          Env = [
+            "VUE_BUNDLE=${packages.game-night-frontend}"
+            "RUST_LOG=info,game_night=debug"
+          ];
           Cmd = [ "${packages.game-night-backend}/bin/game-night" ];
           WorkingDir = "/app";
         };
       };
 
       defaultPackage = packages.game-night-docker;
+
+
+      apps.game-night-backend = utils.lib.mkApp {
+        drv = packages.game-night-backend;
+        exePath = "/bin/game-night";
+      };
 
       devShell = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
@@ -72,6 +81,7 @@
           rustc
           rustfmt
           rust-analyzer
+          sqlx-cli
 
           # Typescript / Frontend
           nodePackages.npm
