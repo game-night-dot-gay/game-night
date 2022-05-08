@@ -4,6 +4,7 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 pub struct AppConfig {
     pub port: u16,
+    pub database_url: String,
 }
 
 impl AppConfig {

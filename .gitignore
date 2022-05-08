@@ -2,5 +2,8 @@
 result
 .direnv
 
+# database data
+data
+
 # IaC
 .terraform/
