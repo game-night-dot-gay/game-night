@@ -26,20 +26,28 @@
   networking.interfaces.ens4.useDHCP = true; # Digital OCean NIC 2
   
   # Define a user accounts
+  users.mutableUsers = false; # So we can blow away any set passwords
+
+  users.users.root.hashedPassword = "!"; # Disables root login with password
+  
+
   users.users.allie = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "podman" ];
+    openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJbcXYsCa/TwoWMbx6GCQQV4vKWuSjQy0gri0+ZFuvVC allie@allie-laptop" ];
   };
 
   users.users.amy = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "podman" ];
+    openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO/PY5G1vwrxu4agNvVaDixP6KlOGACxyaKwHjoZUfys" ];
   };
 
   # TODO - Remove from wheel, create new group and restrict sudoers access
   users.users.automation = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "podman" ];
+    openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHbsshvL0pffEZaxTWkIGpCqkrjtyC2l2M8oFEMJk4Ss automation@game-night" ];
   };
 
   users.users.service-prod = {
@@ -59,9 +67,9 @@
     emacs
     wget
     curl
+    jq
     git
     htop
-    pciutils
   ];
 
   virtualisation = {
@@ -75,7 +83,12 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    banner = "Be Gay, Do Crime. But not cyber crime because that's not cool. Authorized users only.";
+    permitRootLogin = "no";
+    passwordAuthentication = "no";
+  };
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 22 ];

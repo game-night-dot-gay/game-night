@@ -54,7 +54,15 @@ Recommend `tfswitch` to manage Terraform version
 ## Packer Notes
 
 - https://www.packer.io/plugins/builders/digitalocean
-- 
+- Apparently for custom images you can't use the name you have to use the id. To list custom images and see the id:
+
+```sh
+curl -X GET \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $DO_TOKEN" \
+"https://api.digitalocean.com/v2/images?private=true" | jq
+```
+- Set environment variables by prefixing them with `PKR_VAR_` such as `PKR_VAR_ssh_username` (case sensitive)
 
 1. `cd infra/images/podman-prod` and run `packer init image.pkr.hcl`
 2. 
