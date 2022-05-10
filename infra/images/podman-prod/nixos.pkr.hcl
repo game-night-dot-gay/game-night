@@ -24,15 +24,15 @@ build {
 
   provisioner "shell" {
     inline = [
-      "sudo cp /tmp/configuration.nix /etc/nixos/configuration.nix",
-      "sudo cp /tmp/hardware-configuration.nix /etc/nixos/hardware-configuration.nix",
-      "sudo chown -R root:root /etc/nixos/*",
-      "sudo chmod 644 /etc/nixos/*",
-      "sudo nix-channel --update",
-      "sudo nixos-rebuild switch",
-      "sudo nix-env -u --always",
-      "sudo rm -f /nix/var/nix/gcroots/auto/*",
-      "sudo nix-collect-garbage -d"
+      "cp /tmp/configuration.nix /etc/nixos/configuration.nix",
+      "cp /tmp/hardware-configuration.nix /etc/nixos/hardware-configuration.nix",
+      "chown -R root:root /etc/nixos/*",
+      "chmod 644 /etc/nixos/*",
+      "nix-channel --update",
+      "nixos-rebuild switch",
+      "nix-env -u --always",
+      "rm -f /nix/var/nix/gcroots/auto/*",
+      "nix-collect-garbage -d"
     ]
   }
 }
