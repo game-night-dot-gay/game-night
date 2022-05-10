@@ -87,7 +87,7 @@
     enable = true;
     banner = "Be Gay, Do Crime. But not cyber crime because that's not cool. Authorized users only.";
     permitRootLogin = "no";
-    passwordAuthentication = "no";
+    passwordAuthentication = false;
   };
 
   # Open ports in the firewall.
