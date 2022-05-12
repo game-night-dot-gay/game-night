@@ -1,3 +1,6 @@
 # nix flake related files
 result
 .direnv
+
+# IaC
+.terraform/

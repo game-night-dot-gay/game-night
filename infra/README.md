@@ -24,7 +24,11 @@ Recommend `tfswitch` to manage Terraform version
 - `cd game-night/infra/terraform` and run `tfswitch` which will read the `versions.tf` file and install the required version
 - `which terraform` and `terraform version` to confirm what you're using
 - Proceed to commit Terraform crimes
+- Terraform Cloud Org: be-gay-do-crime
+- https://www.digitalocean.com/community/tutorials/how-to-use-terraform-within-your-team
 
+## Terraform Notes
+- Preface Terraform environment variables with `TF_VAR_` so a TF variable of `do_token` would be `export TF_VAR_do_token=123456`
 
 ## NixOS Notes
 
