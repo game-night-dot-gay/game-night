@@ -1,4 +1,4 @@
-name: "ITerraform CI Tests and Build"
+name: "Terraform CI Tests and Build"
 
 on:
   pull_request:
