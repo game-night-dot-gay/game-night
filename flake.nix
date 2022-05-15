@@ -73,8 +73,16 @@
           rustfmt
           rust-analyzer
 
-          # TypeScript / Frontend
-          yarn
+          # Typescript / Frontend
+          nodePackages.npm
+          nodePackages.yarn
+          nodePackages.vue-cli
+          nodePackages.http-server
+
+          # infrastructure
+          tfswitch
+          packer
+
         ];
 
         RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";

@@ -1,0 +1,73 @@
+name: "Terraform CI Tests and Build"
+
+on:
+  pull_request:
+    paths:
+      - infra/terraform/**
+  push:
+    branches:
+      - 'main'
+    paths:
+      - infra/terraform/**
+  workflow_run:
+    workflows: [Packer CI Tests and Build]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  terraform:
+    name: Terraform CI Tests and Apply
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.1.9
+        cli_config_credentials_token: ${{ secrets.TERRAFORM_CLOUD_TEAM_TOKEN }}
+    
+    - name: Terraform Format
+      id: fmt
+      run: cd infra/terraform && terraform fmt -check
+
+    - name: Terraform Init
+      id: init
+      run: cd infra/terraform && terraform init
+
+    - name: Terraform Validate
+      id: validate
+      run: cd infra/terraform && terraform validate -no-color
+
+    - name: Get Latest Custom Image ID
+      env: 
+        DO_TOKEN: ${{ secrets.DO_TOKEN }}
+      run: |
+        latest_id=`curl -s -X GET \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer $DO_TOKEN" \
+        "https://api.digitalocean.com/v2/images?private=true" | jq '.images | max_by(.id) | .id'`
+
+        echo "Latest Custom Image ID: $latest_id"
+        echo "CUSTOM_IMAGE_ID=$latest_id" >> $GITHUB_ENV
+
+    - name: Terraform Plan
+      id: plan
+      if: github.event_name == 'pull_request'
+      run: cd infra/terraform && terraform plan -no-color -input=false
+      continue-on-error: true
+      env:
+        TF_VAR_image_name: ${{ env.CUSTOM_IMAGE_ID }}
+        TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
+
+    - name: Terraform Plan Status
+      if: steps.plan.outcome == 'failure'
+      run: exit 1
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: cd infra/terraform && terraform apply -auto-approve -input=false
+      env:
+        TF_VAR_image_name: ${{ env.CUSTOM_IMAGE_ID }}
+        TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
