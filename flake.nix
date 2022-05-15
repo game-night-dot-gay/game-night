@@ -73,9 +73,7 @@
           rustfmt
           rust-analyzer
 
-          # TypeScript / Frontend
-          yarn
-          # javascript / frontend
+          # Typescript / Frontend
           nodePackages.npm
           nodePackages.yarn
           nodePackages.vue-cli
