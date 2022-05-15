@@ -9,7 +9,7 @@ on:
   push:
     branches:
       - 'main'
-    paths-ignore:
+    paths:
       - flake.*
       - backend/**
       - frontend/**
