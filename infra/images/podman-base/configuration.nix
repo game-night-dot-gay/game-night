@@ -67,7 +67,6 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim
-    emacs
     wget
     curl
     jq

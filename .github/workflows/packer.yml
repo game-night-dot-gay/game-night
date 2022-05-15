@@ -1,0 +1,45 @@
+name: "Packer CI Tests and Build"
+
+on:
+  pull_request:
+    paths:
+      - infra/images/**.hcl
+  push:
+    branches:
+      - 'main'
+    paths:
+      - infra/images/**.hcl
+
+jobs:
+  packer:
+    name: Packer CI Tests and Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Note: Hasicorp action does not support packer fmt -check yet >_<
+    - name: Check Packer Formatting
+      run: sudo apt-get install packer && packer fmt -check .
+
+    - name: Validate Packer Templates
+      uses: hashicorp/packer-github-actions@master
+      with:
+        command: validate
+        arguments: -syntax-only
+        target: .
+        working_directory: infra/images/podman-prod
+
+
+    # - name: "Build Image: podman-prod"
+    #  if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    #  uses: hashicorp/packer-github-actions@master
+    #  with:
+    #    command: build
+    #    arguments: "-color=false -on-error=abort"
+    #    target: "."
+    #    working_directory: infra/images/podman-prod
+    #  env:
+    #    PACKER_LOG: 1
+        # HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+        # HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}

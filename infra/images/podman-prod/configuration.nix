@@ -64,7 +64,6 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim
-    emacs
     wget
     curl
     jq
@@ -85,7 +84,7 @@
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
-    banner = "Be Gay, Do Crime. But not cyber crime because that's not cool. Authorized users only.";
+    banner = "Be Gay, Do Crime. But not cyber crime, because that's not cool. Authorized users only.\n\n";
     permitRootLogin = "no";
     passwordAuthentication = false;
   };

@@ -30,7 +30,7 @@ build {
       "chmod 644 /etc/nixos/*",
       "nix-channel --update",
       "nixos-rebuild switch",
-      "nix-env -u --always",
+      "nix-env --upgrade --always",
       "rm -f /nix/var/nix/gcroots/auto/*",
       "nix-collect-garbage -d"
     ]
