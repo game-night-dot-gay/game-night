@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - infra/images/**
+      - .github/workflows/packer.yaml
   push:
     branches:
       - 'main'
     paths:
       - infra/images/**
+      - .github/workflows/packer.yaml
 
 jobs:
   packer:

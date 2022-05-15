@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - infra/terraform/**
+      - .github/workflows/terraform.yaml
   push:
     branches:
       - 'main'
     paths:
       - infra/terraform/**
+      - .github/workflows/terraform.yaml
   workflow_run:
     workflows: [Packer CI Tests and Build]
     types: [completed]

@@ -20,7 +20,7 @@ data "digitalocean_volume" "game_night_backup" {
 }
 
 resource "digitalocean_droplet" "game_night_prod" {
-  image  = var.image_name
+  image  = var.image_id
   name   = "game-night-prod"
   region = "nyc3"
   size   = "s-1vcpu-1gb"
@@ -47,15 +47,16 @@ resource "digitalocean_loadbalancer" "game_night_lb" {
     target_port     = 2727
     target_protocol = "http"
   }
-  /* TODO - Need a certificate first
   forwarding_rule {
     entry_port = 443
     entry_protocol = "https"
 
     target_port = 2727
     target_protocol = "https"
+
+    certificate_name = digitalocean_certificate.certificate
   }
-*/
+
   //TODO change to app port
   healthcheck {
     port     = 22
@@ -69,4 +70,10 @@ resource "digitalocean_container_registry" "registry" {
   name                   = "game-night-registry"
   subscription_tier_slug = "starter"
   region                 = "nyc3"
+}
+
+resource "digitalocean_certificate" "certificate" {
+  name    = "game-night-wildcard"
+  type    = "lets_encrypt"
+  domains = ["gamenight.gay"]
 }
