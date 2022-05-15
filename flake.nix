@@ -57,7 +57,7 @@
         };
       };
 
-      defaultPackage = packages.game-night-backend;
+      defaultPackage = packages.game-night-docker;
 
       devShell = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
