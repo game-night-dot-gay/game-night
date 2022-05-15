@@ -24,6 +24,10 @@ You'll want to install the following tools:
 - [`just`](https://github.com/casey/just)
 - [`cargo`, `clippy`, `rustfmt`, & `rust-analyzer` through `rustup`](https://rustup.rs/)
 - [`yarn`](https://yarnpkg.com/)
+- [`vue-cli`](https://cli.vuejs.org/)
+- [`http-server`](https://www.npmjs.com/package/http-server)
+- [`tfswitch`](https://tfswitch.warrensbox.com/)
+- [`packer`](https://www.packer.io/)
 
 ## License
 
