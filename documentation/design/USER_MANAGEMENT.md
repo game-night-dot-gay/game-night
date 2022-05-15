@@ -67,6 +67,7 @@ erDiagram
         string display_name "not null"
         string pronouns "not null"
         string dietary_needs "not null"
+        boolean is_admin "not null"
     }
     BOARDGAMES {
         uuid boardgame_id PK
@@ -87,3 +88,7 @@ erDiagram
     USERS ||--o{ BOARDGAMES : has
     USERS ||--o{ LOCATIONS : has
 ```
+
+## Future Work
+
+- [ ] Admin management
