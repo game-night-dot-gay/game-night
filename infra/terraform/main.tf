@@ -37,17 +37,17 @@ resource "digitalocean_droplet" "game_night_prod" {
 }
 
 resource "digitalocean_loadbalancer" "game_night_lb" {
-  name = "game-night-lb"
+  name   = "game-night-lb"
   region = "nyc3"
 
   forwarding_rule {
-    entry_port = 80
+    entry_port     = 80
     entry_protocol = "http"
 
-    target_port = 2727
+    target_port     = 2727
     target_protocol = "http"
   }
-/* TODO - Need a certificate first
+  /* TODO - Need a certificate first
   forwarding_rule {
     entry_port = 443
     entry_protocol = "https"
@@ -58,7 +58,7 @@ resource "digitalocean_loadbalancer" "game_night_lb" {
 */
   //TODO change to app port
   healthcheck {
-    port = 22
+    port     = 22
     protocol = "tcp"
   }
 
@@ -68,5 +68,5 @@ resource "digitalocean_loadbalancer" "game_night_lb" {
 resource "digitalocean_container_registry" "registry" {
   name                   = "game-night-registry"
   subscription_tier_slug = "starter"
-  region = "nyc3"
+  region                 = "nyc3"
 }

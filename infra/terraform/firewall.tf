@@ -11,23 +11,23 @@ resource "digitalocean_firewall" "game_night_fw" {
   }
 
   inbound_rule {
-    protocol         = "tcp"
-    port_range       = "80"
-    source_addresses = ["0.0.0.0/0", "::/0"]
+    protocol                  = "tcp"
+    port_range                = "80"
+    source_addresses          = ["0.0.0.0/0", "::/0"]
     source_load_balancer_uids = [digitalocean_loadbalancer.game_night_lb.id]
   }
 
   inbound_rule {
-    protocol         = "tcp"
-    port_range       = "443"
-    source_addresses = ["0.0.0.0/0", "::/0"]
+    protocol                  = "tcp"
+    port_range                = "443"
+    source_addresses          = ["0.0.0.0/0", "::/0"]
     source_load_balancer_uids = [digitalocean_loadbalancer.game_night_lb.id]
   }
 
   inbound_rule {
-    protocol         = "tcp"
-    port_range       = "2727"
-    source_addresses = ["0.0.0.0/0", "::/0"]
+    protocol                  = "tcp"
+    port_range                = "2727"
+    source_addresses          = ["0.0.0.0/0", "::/0"]
     source_load_balancer_uids = [digitalocean_loadbalancer.game_night_lb.id]
   }
 
