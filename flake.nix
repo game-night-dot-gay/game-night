@@ -43,7 +43,7 @@
         '';
       };
 
-      packages.docker = pkgs.dockerTools.buildLayeredImage {
+      packages.game-night-docker = pkgs.dockerTools.buildLayeredImage {
         name = "game-night";
         tag = "0.1.0";
         contents = [
@@ -79,7 +79,7 @@
           nodePackages.vue-cli
           nodePackages.http-server
 
-          # infrastructure
+          # Infrastructure
           tfswitch
           packer
 

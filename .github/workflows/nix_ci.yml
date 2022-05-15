@@ -26,4 +26,4 @@ jobs:
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
     - run: nix build .#game-night-backend
     - run: nix build .#game-night-frontend
-    - run: nix build .#docker
+    - run: nix build .#game-night-docker
