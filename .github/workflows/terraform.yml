@@ -61,12 +61,13 @@ jobs:
         TF_VAR_image_name: ${{ env.CUSTOM_IMAGE_ID }}
         TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
 
-    - uses: actions/github-script@v6
+    - name: Post Terraform Plan PR Comment
+      uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
       env:
         PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.PR_COMMENT_TOKEN }}
         script: |
           // 1. Retrieve existing bot comments for the PR
           const { data: comments } = await github.rest.issues.listComments({
