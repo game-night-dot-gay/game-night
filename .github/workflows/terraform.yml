@@ -41,18 +41,16 @@ jobs:
       run: terraform validate -no-color
 
     - name: Get Latest Custom Image ID
-      uses: actions/github-script@v6
       env: 
         DO_TOKEN: ${{ secrets.DO_TOKEN }}
-      with:
-        script: |
-          latest_id=`curl -s -X GET \
-          -H "Content-Type: application/json" \
-          -H "Authorization: Bearer $DO_TOKEN" \
-          "https://api.digitalocean.com/v2/images?private=true" | jq '.images | max_by(.id) | .id'`
+      run: |
+        latest_id=`curl -s -X GET \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer $DO_TOKEN" \
+        "https://api.digitalocean.com/v2/images?private=true" | jq '.images | max_by(.id) | .id'`
 
-          echo "Latest Custom Image ID: $latest_id"
-          echo "CUSTOM_IMAGE_ID=$latest_id" >> $GITHUB_ENV
+        echo "Latest Custom Image ID: $latest_id"
+        echo "CUSTOM_IMAGE_ID=$latest_id" >> $GITHUB_ENV
 
     - name: Terraform Plan
       id: plan
