@@ -20,7 +20,7 @@ jobs:
 
     # Note: Hasicorp action does not support `packer fmt -check` yet >_<
     - name: Check Packer Formatting
-      run: sudo apt-get install packer && packer fmt -check .
+      run: sudo apt-get install packer && cd infra/images/podman-prod && packer fmt -check .
 
     - name: Validate Packer Templates
       uses: hashicorp/packer-github-actions@master
