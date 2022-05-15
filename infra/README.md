@@ -6,34 +6,17 @@
 - [Terraform with DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-use-terraform-with-digitalocean)
 - [Terraform Project Structure](https://www.digitalocean.com/community/tutorials/how-to-structure-a-terraform-project)
 
-### Useful API Queries
 
-```sh
-# List all available Droplet images
-curl -X GET \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $DO_TOKEN" \
-  "https://api.digitalocean.com/v2/images | jq
 
-```
+## Terraform Cloud Notes
+Terraform Cloud is used for remote state management to both allow multiple people to interact with the state 
+as well as providing locking capability so that only one person can apply a change at a time.
 
-## Terraform Setup Notes
-Recommend `tfswitch` to manage Terraform version
-- Install [tfswitch](https://tfswitch.warrensbox.com/Quick-Start/)
-- Add `/home/$USER/bin` to your path. This is where tfswitch will install Terraform
-- `cd game-night/infra/terraform` and run `tfswitch` which will read the `versions.tf` file and install the required version
-- `which terraform` and `terraform version` to confirm what you're using
-- Proceed to commit Terraform crimes
-- Terraform Cloud Org: be-gay-do-crime
-- https://www.digitalocean.com/community/tutorials/how-to-use-terraform-within-your-team
+- Terraform Cloud Org: `be-gay-do-crime`
+- [Digital Ocean Terraform Cloud Tutorial](https://www.digitalocean.com/community/tutorials/how-to-use-terraform-within-your-team)
 
 ## Terraform Notes
 - Preface Terraform environment variables with `TF_VAR_` so a TF variable of `do_token` would be `export TF_VAR_do_token=123456`
-
-## NixOS Notes
-
-1. [Disk Partitioning](https://nixos.org/manual/nixos/stable/#sec-installation-partitioning-UEFI)
-2. 
 
 ## Digital Ocean Custom Image From Scratch Notes
 
@@ -50,15 +33,12 @@ Recommend `tfswitch` to manage Terraform version
 11. Launch Droplet and confirm networking works
 12 . Delete the initial image and use `packer` to manage image changes going forward
 
-## Image Cleanup TODO
-
-- Get rid of passwords and only use SSH keys
-- SSH don't allow password logins
-
 ## Packer Notes
-
+- Set environment variables by prefixing them with `PKR_VAR_` such as `PKR_VAR_ssh_username` (case sensitive)
 - https://www.packer.io/plugins/builders/digitalocean
-- Apparently for custom images you can't use the name you have to use the id. To list custom images and see the id:
+- For custom images you can't use the name, you have to use the id.
+
+### List custom images and see the id:
 
 ```sh
 curl -X GET \
@@ -66,7 +46,22 @@ curl -X GET \
 -H "Authorization: Bearer $DO_TOKEN" \
 "https://api.digitalocean.com/v2/images?private=true" | jq
 ```
-- Set environment variables by prefixing them with `PKR_VAR_` such as `PKR_VAR_ssh_username` (case sensitive)
 
-1. `cd infra/images/podman-prod` and run `packer init image.pkr.hcl`
-2. 
+### How to get the latest image ID
+```sh                                                                                                                                                                                           
+latest_id=`curl -s -X GET \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $DO_TOKEN" \
+"https://api.digitalocean.com/v2/images?private=true" | jq '.images | max_by(.id) | .id'`
+
+echo $latest_id
+```
+
+### List all available Droplet images
+```sh
+curl -X GET \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $DO_TOKEN" \
+  "https://api.digitalocean.com/v2/images | jq
+
+```

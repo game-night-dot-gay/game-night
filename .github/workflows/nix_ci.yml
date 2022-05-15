@@ -1,4 +1,4 @@
-name: "Nix CI Tests"
+name: "Nix Flake CI Tests"
 
 on:
   pull_request:

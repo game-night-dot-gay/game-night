@@ -1,0 +1,184 @@
+name: "Infrastructure CI Tests and Build"
+
+on:
+  pull_request:
+    paths:
+      - infra/**
+  push:
+    branches:
+      - 'main'
+    paths:
+      - infra/**
+
+jobs:
+  #################
+  #     Packer    #
+  #################
+  packer:
+    name: Packer CI Tests and Build
+    on:
+      pull_request:
+        paths:
+          - infra/images/**
+      push:
+        branches:
+          - 'main'
+        paths:
+          - infra/images/**
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Note: Hasicorp action does not support packer fmt -check yet >_<
+    - name: Check Packer Formatting
+      run: sudo apt-get install packer && packer fmt -check .
+
+    - name: Validate Packer Templates
+      uses: hashicorp/packer-github-actions@master
+      with:
+        command: validate
+        arguments: -syntax-only
+        target: .
+        working_directory: infra/images/podman-prod
+
+    - name: "Build Image: podman-prod"
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: hashicorp/packer-github-actions@master
+      with:
+        command: build
+        arguments: "-color=false -on-error=abort"
+        target: "."
+        working_directory: infra/images/podman-prod
+      env:
+        PACKER_LOG: 1
+        PKR_VAR_do_token: ${{ secrets.DO_TOKEN }}
+
+  #################
+  #    Terraform  #
+  #################
+  terraform:
+    name: Terraform CI Tests and Apply
+    on:
+      pull_request:
+        paths:
+          - infra/terraform/**
+      push:
+        branches:
+          - 'main'
+        paths:
+          - infra/terraform/**
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.1.9
+        cli_config_credentials_token: ${{ secrets.TERRAFORM_CLOUD_TEAM_TOKEN }}
+    
+    - name: Terraform Format
+      id: fmt
+      run: terraform fmt -check
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+    - name: Get Latest Custom Image ID
+      uses: actions/github-script@v6
+      env: 
+        DO_TOKEN: ${{ secrets.DO_TOKEN }}
+      with:
+        script: |
+          latest_id=`curl -s -X GET \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer $DO_TOKEN" \
+          "https://api.digitalocean.com/v2/images?private=true" | jq '.images | max_by(.id) | .id'`
+
+          echo "Latest Custom Image ID: $latest_id"
+          echo "CUSTOM_IMAGE_ID=$latest_id" >> $GITHUB_ENV
+
+    - name: Terraform Plan
+      id: plan
+      if: github.event_name == 'pull_request'
+      run: terraform plan -no-color -input=false
+      continue-on-error: true
+      env:
+        TF_VAR_image_name: ${{ env.CUSTOM_IMAGE_ID }}
+        TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
+
+    - uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      env:
+        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          // 1. Retrieve existing bot comments for the PR
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          })
+          const botComment = comments.find(comment => {
+            return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
+          })
+
+          // 2. Prepare format of the comment
+          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+          <details><summary>Validation Output</summary>
+
+          \`\`\`\n
+          ${{ steps.validate.outputs.stdout }}
+          \`\`\`
+
+          </details>
+
+          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+          
+          <details><summary>Show Plan</summary>
+          
+          \`\`\`\n
+          ${process.env.PLAN}
+          \`\`\`
+          
+          </details>
+          
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+          
+          // 3. If we have a comment, update it, otherwise create a new one
+          if (botComment) {
+            github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: output
+            })
+          } else {
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+          }
+
+    - name: Terraform Plan Status
+      if: steps.plan.outcome == 'failure'
+      run: exit 1
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve -input=false
+      env:
+        TF_VAR_image_name: ${{ env.CUSTOM_IMAGE_ID }}
+        TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
