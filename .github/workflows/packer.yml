@@ -1,4 +1,4 @@
-name: "Packer CI Tests and Build"
+name: "Packer"
 
 on:
   pull_request:
@@ -14,7 +14,7 @@ on:
 
 jobs:
   packer:
-    name: Packer CI Tests and Build
+    name: CI Tests and Build
     runs-on: ubuntu-latest
     steps:
     - name: Checkout

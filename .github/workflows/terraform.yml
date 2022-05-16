@@ -1,4 +1,4 @@
-name: "Terraform CI Tests and Build"
+name: "Terraform"
 
 on:
   pull_request:
@@ -18,7 +18,7 @@ on:
 
 jobs:
   terraform:
-    name: Terraform CI Tests and Apply
+    name: CI Tests and Apply
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
