@@ -1,4 +1,4 @@
-name: "Nix Flake CI Tests"
+name: "Nix Flake"
 
 on:
   pull_request:
@@ -17,7 +17,7 @@ on:
 
 jobs:
   tests:
-    name: Nix Flake Build
+    name: CI Tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

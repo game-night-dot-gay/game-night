@@ -28,7 +28,6 @@ You'll want to install the following tools:
 - [`sqlx-cli`](https://github.com/launchbadge/sqlx/blob/master/sqlx-cli/README.md)
 - [`yarn`](https://yarnpkg.com/)
 - [`vue-cli`](https://cli.vuejs.org/)
-- [`http-server`](https://www.npmjs.com/package/http-server)
 - [`tfswitch`](https://tfswitch.warrensbox.com/)
 - [`packer`](https://www.packer.io/)
 

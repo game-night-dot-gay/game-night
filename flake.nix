@@ -52,7 +52,7 @@
 
         config = {
           Env = [
-            "VUE_BUNDLE=${packages.game-night-frontend}"
+            "FRONTEND_DIR=${packages.game-night-frontend}"
             "RUST_LOG=info,game_night=debug"
           ];
           Cmd = [ "${packages.game-night-backend}/bin/game-night" ];

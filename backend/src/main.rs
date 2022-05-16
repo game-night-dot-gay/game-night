@@ -1,6 +1,8 @@
 use crate::config::AppConfig;
-use axum::{extract::Extension, response::Json, routing::get, Router};
+use axum::{extract::Extension, response::{Json, IntoResponse}, routing::{get, get_service}, Router, http::StatusCode};
 use sqlx::postgres::{PgPool, PgPoolOptions};
+use tokio::io;
+use tower_http::services::ServeDir;
 use std::net::SocketAddr;
 use std::time::Duration;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
@@ -39,7 +41,8 @@ async fn main() -> color_eyre::Result<()> {
     }
 
     let app = Router::new()
-        .route("/users", get(users_endpoint))
+        .route("/api/users", get(users_endpoint))
+        .fallback(get_service(ServeDir::new(config.frontend_dir)).handle_error(handle_error))
         .layer(tower_http::trace::TraceLayer::new_for_http())
         .layer(Extension(pool));
 
@@ -60,4 +63,8 @@ async fn users_endpoint(
         .await
         .map_err(api::error::ApiError::from)?;
     Ok(Json(users))
+}
+
+async fn handle_error(_err: io::Error) -> impl IntoResponse {
+    (StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong...")
 }

@@ -24,6 +24,12 @@ jobs:
     - name: Check Packer Formatting
       run: sudo apt-get install packer && cd infra/images/podman-prod && packer fmt -check .
 
+    - name: Packer Init
+      uses: hashicorp/packer-github-actions@master
+      with:
+        command: init
+        working_directory: infra/images/podman-prod
+
     - name: Validate Packer Templates
       uses: hashicorp/packer-github-actions@master
       with:

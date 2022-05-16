@@ -7,8 +7,15 @@ _default:
 build-backend:
   cd backend && cargo build --release
 
+build-frontend:
+  cd frontend && npm run build
+
+build: build-backend build-frontend
+
+build-and-run: build run-app
+
 run-app:
-  RUST_LOG=info,game_night=trace {{justfile_directory()}}/backend/target/release/game-night
+  RUST_LOG=info,game_night=trace FRONTEND_DIR={{justfile_directory()}}/frontend/dist {{justfile_directory()}}/backend/target/release/game-night
 
 database-start:
   # ensure the data folder exists
@@ -43,11 +50,3 @@ database-create-migration name:
 
 database-prepare-for-ci:
   cd backend && cargo sqlx prepare
-build-frontend:
-  cd frontend && npm run build
-
-build: build-backend build-frontend
-
-run-local: build
-  export FRONTEND_DIR=`pwd`/frontend/dist
-  `pwd`/backend/target/release/game-night
