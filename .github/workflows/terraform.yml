@@ -60,7 +60,7 @@ jobs:
       run: cd infra/terraform && terraform plan -no-color -input=false
       continue-on-error: true
       env:
-        TF_VAR_image_name: ${{ env.CUSTOM_IMAGE_ID }}
+        TF_VAR_image_id: ${{ env.CUSTOM_IMAGE_ID }}
         TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
 
     - name: Terraform Plan Status
@@ -68,9 +68,9 @@ jobs:
       run: exit 1
 
     - name: Terraform Apply
-    # TODO - Uncomment before merge
-    #  if: github.ref == 'refs/heads/main'
+      # TODO - Uncomment before merge
+      #if: github.ref == 'refs/heads/main'
       run: cd infra/terraform && terraform apply -auto-approve -input=false
       env:
-        TF_VAR_image_name: ${{ env.CUSTOM_IMAGE_ID }}
+        TF_VAR_image_id: ${{ env.CUSTOM_IMAGE_ID }}
         TF_VAR_do_token: ${{ secrets.DO_TOKEN }}

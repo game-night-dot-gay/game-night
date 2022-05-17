@@ -20,7 +20,7 @@ data "digitalocean_volume" "game_night_backup" {
 }
 
 resource "digitalocean_droplet" "game_night_prod" {
-  image  = var.image_name
+  image  = var.image_id
   name   = "game-night-prod"
   region = "nyc3"
   size   = "s-1vcpu-1gb"
@@ -36,33 +36,9 @@ resource "digitalocean_droplet" "game_night_prod" {
   graceful_shutdown = true
 }
 
-resource "digitalocean_loadbalancer" "game_night_lb" {
-  name   = "game-night-lb"
-  region = "nyc3"
-
-  forwarding_rule {
-    entry_port     = 80
-    entry_protocol = "http"
-
-    target_port     = 2727
-    target_protocol = "http"
-  }
-  /* TODO - Need a certificate first
-  forwarding_rule {
-    entry_port = 443
-    entry_protocol = "https"
-
-    target_port = 2727
-    target_protocol = "https"
-  }
-*/
-  //TODO change to app port
-  healthcheck {
-    port     = 22
-    protocol = "tcp"
-  }
-
-  droplet_ids = [digitalocean_droplet.game_night_prod.id]
+resource "digitalocean_floating_ip" "game_night_prod" {
+  droplet_id = digitalocean_droplet.game_night_prod.id
+  region     = digitalocean_droplet.game_night_prod.region
 }
 
 resource "digitalocean_container_registry" "registry" {
@@ -70,3 +46,9 @@ resource "digitalocean_container_registry" "registry" {
   subscription_tier_slug = "starter"
   region                 = "nyc3"
 }
+
+resource "digitalocean_certificate" "certificate" {
+  name    = "game-night-wildcard"
+  type    = "lets_encrypt"
+  domains = ["gamenight.gay", "*.gamenight.gay"]
+} 
