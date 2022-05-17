@@ -88,7 +88,6 @@
           nodePackages.npm
           nodePackages.yarn
           nodePackages.vue-cli
-          nodePackages.http-server
 
           # Infrastructure
           tfswitch

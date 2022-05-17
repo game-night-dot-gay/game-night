@@ -43,3 +43,11 @@ database-create-migration name:
 
 database-prepare-for-ci:
   cd backend && cargo sqlx prepare
+build-frontend:
+  cd frontend && npm run build
+
+build: build-backend build-frontend
+
+run-local: build
+  export FRONTEND_DIR=`pwd`/frontend/dist
+  `pwd`/backend/target/release/game-night
