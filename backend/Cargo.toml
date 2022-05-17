@@ -5,7 +5,7 @@ edition = "2021"
 license-file = "LICENSE"
 
 [dependencies]
-axum = { version = "0.5.5", features = ["headers", "http2"] }
+axum = { version = "0.5.6", features = ["headers", "http2"] }
 color-eyre = "0.6.1"
 config = { version = "0.13.1", default-features = false, features = ["toml"] }
 eyre = "0.6.8"
