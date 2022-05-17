@@ -68,7 +68,8 @@ jobs:
       run: exit 1
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # TODO - Uncomment before merge
+    #  if: github.ref == 'refs/heads/main'
       run: cd infra/terraform && terraform apply -auto-approve -input=false
       env:
         TF_VAR_image_name: ${{ env.CUSTOM_IMAGE_ID }}
