@@ -50,5 +50,6 @@ jobs:
       env:
         PACKER_LOG: 1
         PKR_VAR_do_token: ${{ secrets.DO_TOKEN }}
+        PKR_VAR_ssh_password: ${{ secrets.ROOT_PASSWORD }}
 
     # TODO - Image cleanup step or job
