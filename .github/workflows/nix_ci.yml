@@ -54,12 +54,13 @@ jobs:
       # TODO - Uncomment before merge
       # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
+        docker load < result
         docker image ls
-        docker tag game-night:0.1.0 ${{ secrets.REGISTRY }}/game-night-registry/game-night:0.1.0
+        docker tag game-night ${{ secrets.REGISTRY }}/game-night-registry/game-night:0.1.0
         docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:0.1.0
 
         docker image ls
-        docker tag game-night:0.1.0 ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest
+        docker tag game-night ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest
         docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest
 
 
