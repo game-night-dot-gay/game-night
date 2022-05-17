@@ -31,6 +31,46 @@ jobs:
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
         # If you chose API tokens for write access OR if you have a private cache
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix build .#game-night-backend
-    - run: nix build .#game-night-frontend
-    - run: nix build .#game-night-docker
+    
+    - name: Build Backend
+      run: nix build .#game-night-backend
+
+    - name: Build Frontend
+      run: nix build .#game-night-frontend
+
+    - name: Build Docker Image
+      run: nix build .#game-night-docker
+
+    - name: Log in to the Container Registry
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ secrets.REGISTRY }}
+        username: ${{ secrets.DO_TOKEN }}
+        password: ${{ secrets.DO_TOKEN }}
+
+    - name: Push Docker Image
+      # TODO - Uncomment before merge
+      # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        docker image ls --no-trunc
+        docker tag game-night registry.digitalocean.com/game-night-registry/game-night:0.1.0
+        docker push registry.digitalocean.com/game-night-registry/game-night:0.1.0
+        
+        docker tag game-night registry.digitalocean.com/game-night-registry/game-night:latest
+        docker push registry.digitalocean.com/game-night-registry/game-night:latest
+
+
+    - name: Deploy App
+      # TODO - Uncomment before merge
+      # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.PROD_HOSTNAME }}
+        username: ${{ secrets.AUTOMATION_USERNAME }}
+        key: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}
+        script: |
+          whoami
+          ls -la
+
+

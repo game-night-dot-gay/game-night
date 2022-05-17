@@ -14,6 +14,17 @@ build: build-backend build-frontend
 
 build-and-run: build run-app
 
+build-flake-backend:
+  nix build .#game-night-backend
+
+build-flake-frontend:
+  nix build .#game-night-frontend
+
+build-flake-docker:
+  nix build .#game-night-docker
+
+build-flake: build-flake-backend build-flake-frontend build-flake-docker
+
 run-app:
   RUST_LOG=info,game_night=trace FRONTEND_DIR={{justfile_directory()}}/frontend/dist {{justfile_directory()}}/backend/target/release/game-night
 
