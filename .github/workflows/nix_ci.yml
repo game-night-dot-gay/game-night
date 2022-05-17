@@ -56,7 +56,9 @@ jobs:
       run: |
         docker load < result
         docker image ls
-        docker tag game-night ${{ secrets.REGISTRY }}/game-night-registry/game-night:0.1.0
+        docker tag game-night:0.1.0 ${{ secrets.REGISTRY }}/game-night-registry/game-night:0.1.0
+        
+        docker image ls
         docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:0.1.0
 
         docker image ls
