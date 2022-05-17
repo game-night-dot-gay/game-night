@@ -54,7 +54,7 @@ jobs:
       # TODO - Uncomment before merge
       # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
-        docker image ls --no-trunc
+        docker image ls
         docker tag game-night registry.digitalocean.com/game-night-registry/game-night:0.1.0
         docker push registry.digitalocean.com/game-night-registry/game-night:0.1.0
 
