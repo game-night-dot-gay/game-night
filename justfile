@@ -22,6 +22,7 @@ build-flake-frontend:
 
 build-flake-docker:
   nix build .#game-night-docker
+  docker load < result
 
 build-flake: build-flake-backend build-flake-frontend build-flake-docker
 
