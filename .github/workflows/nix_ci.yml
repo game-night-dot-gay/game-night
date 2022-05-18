@@ -68,16 +68,29 @@ jobs:
 
 
     - name: Deploy App
+      # Reference: https://blog.benoitblanchon.fr/github-action-run-ssh-commands/
       # TODO - Uncomment before merge
       # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.PROD_HOSTNAME }}
-        username: ${{ secrets.AUTOMATION_USERNAME }}
-        key: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}
-        passphrase: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE_PASSWORD }}
-        script: |
-          whoami
-          ls -la
+      run: |
+        # Setup SSH
+        mkdir -p ~/.ssh/
+        echo "$SSH_KEY" > ~/.ssh/automation.key
+        chmod 600 ~/.ssh/automation.key
+        cat >>~/.ssh/config <<END
+        Host prod
+          HostName $SSH_HOST
+          User $SSH_USER
+          IdentityFile ~/.ssh/automation.key
+          StrictHostKeyChecking no
+        END
+
+        ssh prod 'whoami'
+        ssh prod 'ls -la'
+        ssh prod 'pwd'
+      env:
+          SSH_USER: ${{ secrets.AUTOMATION_USERNAME }}
+          SSH_KEY: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}
+          SSH_HOST: ${{ secrets.PROD_HOSTNAME }}
+
 
 
