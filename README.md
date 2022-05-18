@@ -13,6 +13,12 @@ This project is intended to allow groups of friends to organize game nights.
 
 For local development, [`just`](https://github.com/casey/just) is used to automate common workflows  (see [`justfile`](./justfile)).
 
+### Configuration
+
+#### SendGrid
+
+For email to work for login links, you will need a SendGrid token. You can find generate a new one under [Settings > API Keys](https://app.sendgrid.com/settings/api_keys) and either add it to your environment as `EMAIL_TOKEN` when running the application or store it in `app_config.toml` under the key `email_token`.
+
 ### Development Tooling
 
 #### Nix

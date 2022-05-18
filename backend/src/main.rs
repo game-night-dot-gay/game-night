@@ -1,17 +1,25 @@
 use crate::config::AppConfig;
-use axum::{extract::Extension, response::{Json, IntoResponse}, routing::{get, get_service}, Router, http::StatusCode};
+use axum::{
+    extract::Extension,
+    http::StatusCode,
+    response::{IntoResponse, Json},
+    routing::{get, get_service},
+    Router,
+};
 use sqlx::postgres::{PgPool, PgPoolOptions};
+use std::time::Duration;
+use std::{net::SocketAddr, sync::Arc};
 use tokio::io;
 use tower_http::services::ServeDir;
-use std::net::SocketAddr;
-use std::time::Duration;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
 mod api;
 mod config;
 mod db;
+mod email;
 
 use db::models::User;
+use email::SendGridEmailSender;
 
 #[tokio::main]
 async fn main() -> color_eyre::Result<()> {
@@ -39,14 +47,24 @@ async fn main() -> color_eyre::Result<()> {
 
         tracing::info!("Completed migrations");
     }
-
-    let app = Router::new()
-        .route("/api/users", get(users_endpoint))
-        .fallback(get_service(ServeDir::new(config.frontend_dir)).handle_error(handle_error))
-        .layer(tower_http::trace::TraceLayer::new_for_http())
-        .layer(Extension(pool));
+    let email_sender = SendGridEmailSender::new(&config);
 
     let addr = SocketAddr::try_from(([0, 0, 0, 0], config.port))?;
+
+    let frontend_dir = config.frontend_dir.clone();
+    let config = Arc::new(config);
+
+    let api_routes = Router::new()
+        .route("/users", get(users_endpoint))
+        .layer(Extension(config))
+        .layer(Extension(pool))
+        .layer(Extension(email_sender));
+
+    let app = Router::new()
+        .nest("/api", api_routes)
+        .fallback(get_service(ServeDir::new(frontend_dir)).handle_error(handle_error))
+        .layer(tower_http::trace::TraceLayer::new_for_http());
+
     tracing::info!("Listening on {addr}");
     axum::Server::bind(&addr)
         .serve(app.into_make_service())

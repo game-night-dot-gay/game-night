@@ -1,11 +1,14 @@
 use config::{Config, Environment, File};
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct AppConfig {
+    pub app_domain: String,
     pub port: u16,
     pub database_url: String,
     pub frontend_dir: String,
+    pub email_sender: String,
+    pub email_token: String,
 }
 
 impl AppConfig {
