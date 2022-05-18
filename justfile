@@ -25,7 +25,11 @@ build-flake-docker:
   docker load < result
 
 run-app:
-  RUST_LOG=info,game_night=trace FRONTEND_DIR={{justfile_directory()}}/frontend/dist {{justfile_directory()}}/backend/target/release/game-night
+  APP_DOMAIN=localhost \
+    FRONTEND_DIR={{justfile_directory()}}/frontend/dist \
+    EMAIL_SENDER=noreply@gamenight.gay \
+    RUST_LOG=debug,game_night=trace \
+    {{justfile_directory()}}/backend/target/release/game-night
 
 database-start:
   # ensure the data folder exists

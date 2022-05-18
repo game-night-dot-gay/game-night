@@ -117,6 +117,8 @@ jobs:
             --pod game-night \
             --name game-night-app \
             -e DATABASE_URL=$DATABASE_URL \
+            -e EMAIL_SENDER=$EMAIL_SENDER \
+            -e EMAIL_TOKEN=$EMAIL_TOKEN \
             ${{ secrets.REGISTRY }}/game-night/game-night:latest
 
           sudo podman ps
@@ -130,6 +132,8 @@ jobs:
         SSH_KEY: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}
         SSH_HOST: ${{ secrets.PROD_HOSTNAME }}
         DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
+        EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+        EMAIL_TOKEN: ${{ secrets.EMAIL_TOKEN }}
 
 
 

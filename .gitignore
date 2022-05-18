@@ -7,3 +7,6 @@ data
 
 # IaC
 .terraform/
+
+# local development
+app_config.toml

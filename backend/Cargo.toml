@@ -5,10 +5,13 @@ edition = "2021"
 license-file = "LICENSE"
 
 [dependencies]
+askama = "0.11.1"
+async-trait = "0.1.53"
 axum = { version = "0.5.6", features = ["headers", "http2"] }
 color-eyre = "0.6.1"
 config = { version = "0.13.1", default-features = false, features = ["toml"] }
 eyre = "0.6.8"
+sendgrid = { version = "0.17.4", default-features = false, features = ["async", "rustls"] }
 serde = "1.0.137"
 serde_json = "1.0.81"
 sqlx = { version = "0.5.13", features = ["runtime-tokio-rustls", "macros", "migrate", "uuid", "time", "json", "tls", "offline", "postgres"] }
@@ -16,6 +19,7 @@ tokio = { version = "1.18.2", features = ["full"] }
 tower = "0.4.12"
 tower-http = { version = "0.3.3", features = ["fs", "trace"] }
 tracing = "0.1.34"
+tracing-futures = "0.2.5"
 tracing-subscriber = { version = "0.3.11", features = ["env-filter", "json"] }
 uuid = { version = "0.8.0", features = ["serde", "v4"] } # uuid version kept in sync with sqlx
 
