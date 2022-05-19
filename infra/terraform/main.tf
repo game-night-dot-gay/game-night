@@ -54,6 +54,7 @@ resource "digitalocean_floating_ip" "game_night_prod" {
 sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       EOT
       ,
+      "sudo cat /etc/nixos/configuration.nix",
       "sudo nix-channel --update",
       "sudo nixos-rebuild switch",
       "sudo nix-env --upgrade --always",

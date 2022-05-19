@@ -108,7 +108,7 @@ jobs:
           sudo podman run -d \
             --pod game-night \
             --name game-night-app \
-            -e DATABASE_URL \
+            -e DATABASE_URL=$DATABASE_URL \
             ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest
 
           sudo podman ps
