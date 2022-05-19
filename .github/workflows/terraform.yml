@@ -62,6 +62,8 @@ jobs:
       env:
         TF_VAR_image_id: ${{ env.CUSTOM_IMAGE_ID }}
         TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
+        TF_VAR_ssh_user: ${{ secrets.AUTOMATION_USERNAME }}
+        TF_VAR_ssh_key: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}
 
     - name: Terraform Plan Status
       if: steps.plan.outcome == 'failure'
@@ -74,3 +76,5 @@ jobs:
       env:
         TF_VAR_image_id: ${{ env.CUSTOM_IMAGE_ID }}
         TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
+        TF_VAR_ssh_user: ${{ secrets.AUTOMATION_USERNAME }}
+        TF_VAR_ssh_key: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}

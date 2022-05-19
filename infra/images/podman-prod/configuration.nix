@@ -34,7 +34,7 @@
   users.users.allie = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "podman" ];
-    openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJbcXYsCa/TwoWMbx6GCQQV4vKWuSjQy0gri0+ZFuvVC allie@allie-laptop" ];
+    openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJbcXYsCa/TwoWMbx6GCQQV4vKWuSjQy0gri0+ZFuvVC" ];
     hashedPassword = "$6$DE7QNygUHoo6fQY/$ImKkrRIDn1dRwsTx.d1VVHc9G2W5xplH5U3g22Eb/pC4vLHQoGtNAj521hb1G.oj4F9.prSnwJGzDiwv7UU.j.";
   };
 
@@ -49,8 +49,12 @@
   users.users.automation = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "podman" ];
-    openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHbsshvL0pffEZaxTWkIGpCqkrjtyC2l2M8oFEMJk4Ss automation@game-night" ];
+    openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHbsshvL0pffEZaxTWkIGpCqkrjtyC2l2M8oFEMJk4Ss" ];
     hashedPassword = "$6$CRroCRvTrQrTn2lb$03JdjYx4it5qZR7aMAXchC1negv.RHpwScDhgSd4ik8IdRvH4AhsViDwsTSOwAu0uyPNfHUkDK43nTE..Iu7S.";
+  };
+
+  users.users.nginx = {
+    extraGroups = [ "acme" ];
   };
 
   users.users.postgres = {
@@ -72,6 +76,12 @@
     { users = [ "automation" ]; 
       commands = [ { 
         command = "/run/current-system/sw/bin/podman"; 
+        options = [ "NOPASSWD" ]; }
+        { 
+        command = "/run/wrappers/bin/mount"; 
+        options = [ "NOPASSWD" ]; } 
+        { 
+        command = "/run/current-system/sw/bin/tee"; 
         options = [ "NOPASSWD" ]; } 
       ]; 
     }
@@ -98,7 +108,90 @@
     };
   };
 
-  # List services that you want to enable:
+ 
+
+  services.nginx = {
+    enable = true;
+
+    # Use recommended settings
+    recommendedGzipSettings = true;
+    recommendedOptimisation = true;
+    recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+
+    # Only allow PFS-enabled ciphers with AES256
+    sslCiphers = "AES256+EECDH:AES256+EDH:!aNULL";
+
+    commonHttpConfig = ''
+      # Add HSTS header with preloading to HTTPS requests.
+      # Adding this header to HTTP requests is discouraged
+      map $scheme $hsts_header {
+          https   "max-age=31536000; includeSubdomains; preload";
+      }
+      add_header Strict-Transport-Security $hsts_header;
+
+      # Enable CSP for your services.
+      #add_header Content-Security-Policy "script-src 'self'; object-src 'none'; base-uri 'none';" always;
+
+      # Minimize information leaked to other domains
+      add_header 'Referrer-Policy' 'origin-when-cross-origin';
+
+      # Disable embedding as a frame
+      add_header X-Frame-Options DENY;
+
+      # Prevent injection of code in other mime types (XSS Attacks)
+      add_header X-Content-Type-Options nosniff;
+
+      # Enable XSS protection of the browser.
+      # May be unnecessary when CSP is configured properly (see above)
+      add_header X-XSS-Protection "1; mode=block";
+
+      # This might create errors
+      proxy_cookie_path / "/; secure; HttpOnly; SameSite=strict";
+    '';
+
+    
+ 
+    virtualHosts = let gameNightConfig = {
+      useACMEHost = "gamenight.gay";
+      forceSSL = false;
+      addSSL = true;
+      sslCertificate = "/var/lib/acme/gamenight.gay/cert.pem";
+      locations."/.well-known/acme-challenge/" = {
+          root = "/var/lib/acme/acme-challenge";
+          extraConfig =
+            "if ($scheme = 'https') { rewrite ^ http://$http_host$request_uri? permanent; }";
+      };
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:2727";
+        proxyWebsockets = true; # needed if you need to use WebSocket
+        extraConfig =
+          # required when the target is also TLS server with multiple hosts
+          "proxy_ssl_server_name on;" +
+          # required when the server wants to use HTTP Authentication
+          "proxy_pass_header Authorization;" +
+
+          #+ "if ($scheme = 'http') { rewrite ^ https://$http_host$request_uri? permanent; }"
+          ;
+        };
+        
+      }; 
+    in {
+      "gamenight.gay" = gameNightConfig;
+      "www.gamenight.gay" = gameNightConfig;
+      "prod.gamenight.gay" = gameNightConfig;
+    };
+  };
+
+  security.acme.acceptTerms = true;
+  security.acme.certs = {
+    "gamenight.gay" = {
+      webroot = "/var/lib/acme/acme-challenge";
+      extraDomainNames = [ "www.gamenight.gay" "prod.gamenight.gay" ];
+      email = "admin@gamenight.gay";
+    };
+  };
+    
 
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -109,7 +202,7 @@
   };
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 22 80 443 2727 ];
+  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
 
   # This value determines the NixOS release from which the default

@@ -34,6 +34,22 @@ resource "digitalocean_droplet" "game_night_prod" {
     data.digitalocean_volume.game_night_backup.id
   ]
   graceful_shutdown = true
+
+  connection {
+    type        = "ssh"
+    user        = var.ssh_user
+    private_key = var.ssh_key
+    host        = self.ipv4_address
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod/postgres-data",
+      "echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
+      "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup",
+      "echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game_night_backup ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
+    ]
+  }
 }
 
 resource "digitalocean_floating_ip" "game_night_prod" {
@@ -46,9 +62,3 @@ resource "digitalocean_container_registry" "registry" {
   subscription_tier_slug = "starter"
   region                 = "nyc3"
 }
-
-resource "digitalocean_certificate" "certificate" {
-  name    = "game-night-wildcard"
-  type    = "lets_encrypt"
-  domains = ["gamenight.gay", "*.gamenight.gay"]
-} 

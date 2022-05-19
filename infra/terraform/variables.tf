@@ -1,7 +1,8 @@
 // DigitalOcean PAT
 variable "do_token" {}
 
-//variable "domain_name" {}
+variable "ssh_user" {}
+variable "ssh_key" {}
 
 variable "image_id" {
   type = string
