@@ -18,15 +18,15 @@
       fsType = "ext4";
     };
 
-  fileSystems."/mnt/game-night-prod" =
-    { device = "/dev/disk/by-uuid/c55fa9fa-e418-4d6f-9f61-b6bcd3e40702";
-      fsType = "ext4";
-    };
-
-  fileSystems."/mnt/game-night-backup" =
-    { device = "/dev/disk/by-uuid/c50f1b24-3b30-4f0c-98c0-a8ce6d72b20e";
-      fsType = "ext4";
-    };
+#  fileSystems."/mnt/game-night-prod" =
+#    { device = "/dev/disk/by-uuid/c55fa9fa-e418-4d6f-9f61-b6bcd3e40702";
+#      fsType = "ext4";
+#    };
+#
+#  fileSystems."/mnt/game-night-backup" =
+#    { device = "/dev/disk/by-uuid/c50f1b24-3b30-4f0c-98c0-a8ce6d72b20e";
+#      fsType = "ext4";
+#    };
 
 
   swapDevices =

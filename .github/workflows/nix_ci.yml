@@ -103,7 +103,7 @@ jobs:
             docker.io/library/postgres:14.2
           
           # Start App
-          sudo podman login -u ${{ secrets.DO_TOKEN }}' -p ${{ secrets.DO_TOKEN }} ${{ secrets.REGISTRY }}
+          sudo podman login -u ${{ secrets.DO_TOKEN }} -p ${{ secrets.DO_TOKEN }} ${{ secrets.REGISTRY }}
           sudo podman pull ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest
           sudo podman run -d \
             --pod game-night \
