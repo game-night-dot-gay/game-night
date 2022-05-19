@@ -108,7 +108,7 @@ jobs:
             --pod game-night \
             --name game-night-app \
             -e DATABASE_URL \
-            registry.digitalocean.com/game-night-registry/game-night:latest
+            ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest
 
           sudo podman ps
         "
