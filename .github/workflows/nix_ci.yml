@@ -111,7 +111,7 @@ jobs:
             registry.digitalocean.com/game-night-registry/game-night:latest
 
           sudo podman ps
-        ""
+        "
 
       env:
         POSTGRES_USER: ${{ secrets.POSTGRES_PROD_USER }}
