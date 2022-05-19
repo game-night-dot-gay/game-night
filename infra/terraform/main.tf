@@ -44,6 +44,15 @@ resource "digitalocean_droplet" "game_night_prod" {
 
   provisioner "remote-exec" {
     inline = [
+      <<EOT
+sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
+      EOT
+      ,
+      "sudo nix-channel --update",
+      "sudo nixos-rebuild switch",
+      "sudo nix-env --upgrade --always",
+      "sudo rm -f /nix/var/nix/gcroots/auto/*",
+      "sudo nix-collect-garbage -d",
       "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod/postgres-data",
       "echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
       "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup",
