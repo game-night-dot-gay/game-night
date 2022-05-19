@@ -59,10 +59,10 @@ sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       "sudo nix-env --upgrade --always",
       "sudo rm -f /nix/var/nix/gcroots/auto/*",
       "sudo nix-collect-garbage -d",
-      "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod/postgres-data",
-      "echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
+      "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod",
+      "#echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
       "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup",
-      "echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game_night_backup ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
+      "#echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
     ]
   }
 }
