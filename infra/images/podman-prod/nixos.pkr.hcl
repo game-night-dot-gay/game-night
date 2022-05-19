@@ -17,6 +17,7 @@ build {
   provisioner "file" {
     sources = [
       "configuration.nix",
+      "hardware-configuration.nix",
     ]
     destination = "/tmp/"
   }
@@ -25,10 +26,8 @@ build {
     inline = [
       "mkdir -p /mnt/game-night-prod/postgres-data",
       "mkdir -p /mnt/game-night-backup/postgres-data",
-      "mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod",
-      "mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup",
       "cp /tmp/configuration.nix /etc/nixos/configuration.nix",
-      "nixos-generate-config",
+      "cp /tmp/hardware-configuration.nix /etc/nixos/hardware-configuration.nix",
       "chown -R root:root /etc/nixos/*",
       "chmod 644 /etc/nixos/*",
       "nix-channel --update",
