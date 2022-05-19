@@ -54,10 +54,6 @@
     hashedPassword = "$6$CRroCRvTrQrTn2lb$03JdjYx4it5qZR7aMAXchC1negv.RHpwScDhgSd4ik8IdRvH4AhsViDwsTSOwAu0uyPNfHUkDK43nTE..Iu7S.";
   };
 
-  users.users.nginx = {
-    extraGroups = [ "acme" ];
-  };
-
   users.users.postgres = {
     isNormalUser = true;
     extraGroups = [ ];
