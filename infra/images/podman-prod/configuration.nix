@@ -53,6 +53,11 @@
     hashedPassword = "$6$CRroCRvTrQrTn2lb$03JdjYx4it5qZR7aMAXchC1negv.RHpwScDhgSd4ik8IdRvH4AhsViDwsTSOwAu0uyPNfHUkDK43nTE..Iu7S.";
   };
 
+  users.users.postgres = {
+    isNormalUser = true;
+    extraGroups = [ ];
+  };
+
   users.users.game-night-prod = {
     isNormalUser = true;
     extraGroups = [ ];
@@ -62,6 +67,15 @@
     isNormalUser = true;
     extraGroups = [ ];
   };
+
+  security.sudo.extraRules = [
+    { users = [ "automation" ]; 
+      commands = [ { 
+        command = "/run/current-system/sw/bin/podman"; 
+        options = [ "NOPASSWD" ]; } 
+      ]; 
+    }
+  ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

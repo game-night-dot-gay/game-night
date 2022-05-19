@@ -84,13 +84,44 @@ jobs:
           StrictHostKeyChecking no
         END
 
-        ssh prod 'whoami'
-        ssh prod 'ls -la'
-        ssh prod 'pwd'
+        ssh prod "
+          # Stop App and DB if they are running
+          sudo podman stop game-night-app || exit 0
+          sudo podman stop game-night-db || exit 0
+
+          # Create New Pod (removes containers also)
+          sudo podman pod create --replace -p 2727:2727 --name game-night
+
+          # Start Database
+          sudo podman run -d \
+            --pod game-night \
+            --name game-night-db \
+            -e POSTGRES_USER \
+            -e POSTGRES_PASSWORD \
+            -e POSTGRES_DB=game-night \
+            -v /mnt/game-night-prod/postgres-data:/var/lib/postgresql/data \
+            docker.io/library/postgres:14.2
+          
+          # Start App
+          sudo podman login -u ${{ secrets.DO_TOKEN }}' -p ${{ secrets.DO_TOKEN }} ${{ secrets.REGISTRY }}
+          sudo podman run -d \
+            --pod game-night \
+            --name game-night-app \
+            -e DATABASE_URL \
+            registry.digitalocean.com/game-night-registry/game-night:latest
+
+          sudo podman ps
+        ""
+
       env:
-          SSH_USER: ${{ secrets.AUTOMATION_USERNAME }}
-          SSH_KEY: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}
-          SSH_HOST: ${{ secrets.PROD_HOSTNAME }}
+        POSTGRES_USER: ${{ secrets.POSTGRES_PROD_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PROD_PASSWORD }}
+        SSH_USER: ${{ secrets.AUTOMATION_USERNAME }}
+        SSH_USER_PASSWORD: ${{ secrets.AUTOMATION_USER_PASSWORD }}
+        SSH_KEY: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}
+        SSH_HOST: ${{ secrets.PROD_HOSTNAME }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
+
 
 
 

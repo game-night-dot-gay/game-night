@@ -57,6 +57,7 @@
           ];
           Cmd = [ "${packages.game-night-backend}/bin/game-night" ];
           WorkingDir = "/app";
+          ExposedPorts = { "2727" = {}; };
         };
       };
 
