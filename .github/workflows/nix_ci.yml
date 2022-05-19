@@ -86,8 +86,8 @@ jobs:
 
         ssh prod "
           # Stop App and DB if they are running
-          sudo podman stop game-night-app || exit 0
-          sudo podman stop game-night-db || exit 0
+          sudo podman stop game-night-app || true
+          sudo podman stop game-night-db || true
 
           # Create New Pod (removes containers also)
           sudo podman pod create --replace -p 2727:2727 --name game-night
