@@ -35,11 +35,17 @@ resource "digitalocean_droplet" "game_night_prod" {
   ]
   graceful_shutdown = true
 
+}
+
+resource "digitalocean_floating_ip" "game_night_prod" {
+  droplet_id = digitalocean_droplet.game_night_prod.id
+  region     = digitalocean_droplet.game_night_prod.region
+
   connection {
     type        = "ssh"
     user        = var.ssh_user
     private_key = var.ssh_key
-    host        = self.ipv4_address
+    host        = digitalocean_droplet.game_night_prod.ipv4_address
   }
 
   provisioner "remote-exec" {
@@ -59,11 +65,6 @@ sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       "echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game_night_backup ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
     ]
   }
-}
-
-resource "digitalocean_floating_ip" "game_night_prod" {
-  droplet_id = digitalocean_droplet.game_night_prod.id
-  region     = digitalocean_droplet.game_night_prod.region
 }
 
 resource "digitalocean_container_registry" "registry" {
