@@ -69,6 +69,8 @@
     extraGroups = [ ];
   };
 
+  # Temporary until I can lock this down better
+  security.sudo.wheelNeedsPassword = false;
   security.sudo.extraRules = [
     { users = [ "automation" ]; 
       commands = [ { 
