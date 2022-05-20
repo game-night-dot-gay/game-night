@@ -70,7 +70,7 @@ jobs:
       run: exit 1
 
     - name: Terraform Apply
-      #TODO UNCOMMENT if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main'
       run: cd infra/terraform && terraform apply -auto-approve -input=false
       env:
         TF_VAR_image_id: ${{ env.CUSTOM_IMAGE_ID }}
