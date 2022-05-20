@@ -40,6 +40,19 @@ resource "digitalocean_droplet" "game_night_prod" {
 resource "digitalocean_floating_ip" "game_night_prod" {
   droplet_id = digitalocean_droplet.game_night_prod.id
   region     = digitalocean_droplet.game_night_prod.region
+}
+
+resource "digitalocean_container_registry" "registry" {
+  name                   = "game-night-registry"
+  subscription_tier_slug = "starter"
+  region                 = "nyc3"
+}
+
+resource "null_resource" "ssh_provisioner" {
+
+  triggers = {
+    droplet_id = digitalocean_droplet.game_night_prod.id
+  }
 
   connection {
     type        = "ssh"
@@ -66,10 +79,4 @@ sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       "#echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
     ]
   }
-}
-
-resource "digitalocean_container_registry" "registry" {
-  name                   = "game-night-registry"
-  subscription_tier_slug = "starter"
-  region                 = "nyc3"
 }
