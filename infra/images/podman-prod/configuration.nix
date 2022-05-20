@@ -8,6 +8,13 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+
+      # This is commented out as it cannot be run during the Packer
+      # build because the Let's Encrypt validation will fail. Terraform
+      # is configured to remove the comment and then nixos-rebuild switch
+      # when the image is deployed to make this live.
+      # TODO - Find a way to do this without sed, preferably nix native
+
       #./nginx.nix
     ];
 
@@ -30,7 +37,6 @@
   users.mutableUsers = false; # So we can blow away any set passwords
 
   users.users.root.hashedPassword = "!"; # Disables root login with password
-  
 
   users.users.allie = {
     isNormalUser = true;

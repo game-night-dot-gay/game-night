@@ -61,6 +61,11 @@ resource "null_resource" "ssh_provisioner" {
     host        = digitalocean_droplet.game_night_prod.ipv4_address
   }
 
+  # This sed command is uncommenting the nginx.nix import from the configuration.nix file
+  # so that it will be applied when nixos-rebuild switch is run. This is because
+  # we cannot apply that config during the Packer build or Let's Encrypt validation
+  # will fail.
+  # TODO - Find a better way to solve this so we can remove the sed
   provisioner "remote-exec" {
     inline = [
       <<EOT

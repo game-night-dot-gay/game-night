@@ -12,7 +12,7 @@ on:
       - infra/terraform/**
       - .github/workflows/terraform.yml
   workflow_run:
-    workflows: [Packer CI Tests and Build]
+    workflows: [Packer]
     types: [completed]
     branches: [main]
 

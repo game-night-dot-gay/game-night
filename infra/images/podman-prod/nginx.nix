@@ -65,9 +65,6 @@
         "proxy_ssl_server_name on;" +
         # required when the server wants to use HTTP Authentication
         "proxy_pass_header Authorization;";
-
-        #"if ($scheme = 'http') { rewrite ^ https://$http_host$request_uri? permanent; }";
-        
         };
     }; 
     in {
