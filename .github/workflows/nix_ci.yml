@@ -93,12 +93,6 @@ jobs:
         END
 
         ssh prod "
-          # Make sure Nix environment is clean since we can't run this in the Terraform
-          # Commented out for now, seems to hang
-          #sudo nix-env --upgrade --always
-          #sudo rm -f /nix/var/nix/gcroots/auto/*
-          #sudo nix-collect-garbage -d
-
           # Stop App and DB if they are running
           sudo podman stop game-night-app || true
           sudo podman stop game-night-db || true
