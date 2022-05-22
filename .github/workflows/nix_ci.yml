@@ -60,21 +60,21 @@ jobs:
       #TODO if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
         # latest tag
-        docker tag game-night:latest ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest
-        docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest
+        docker tag game-night:latest ${{ secrets.REGISTRY }}/game-night/game-night:latest
+        docker push ${{ secrets.REGISTRY }}/game-night/game-night:latest
         
         # ref/branch name tag, especially useful for git semver tagging
         # This sed just replaces / with - because merge builds are 'pr#/merge'
         CLEAN_REF_NAME=$(echo $GITHUB_REF_NAME | sed 's/\//-/g')
 
-        docker tag ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest \
-          ${{ secrets.REGISTRY }}/game-night-registry/game-night:$CLEAN_REF_NAME
-        #docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:$CLEAN_REF_NAME
+        docker tag ${{ secrets.REGISTRY }}/game-night/game-night:latest \
+          ${{ secrets.REGISTRY }}/game-night/game-night:$CLEAN_REF_NAME
+        #docker push ${{ secrets.REGISTRY }}/game-night/game-night:$CLEAN_REF_NAME
 
         # git commit SHA hash
-        docker tag ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest \
-          ${{ secrets.REGISTRY }}/game-night-registry/game-night:$GITHUB_SHA
-        #docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:$GITHUB_SHA
+        docker tag ${{ secrets.REGISTRY }}/game-night/game-night:latest \
+          ${{ secrets.REGISTRY }}/game-night/game-night:$GITHUB_SHA
+        #docker push ${{ secrets.REGISTRY }}/game-night/game-night:$GITHUB_SHA
 
     - name: Deploy App
       # Reference: https://blog.benoitblanchon.fr/github-action-run-ssh-commands/
@@ -112,12 +112,12 @@ jobs:
           
           # Start App
           sudo podman login -u ${{ secrets.DO_TOKEN }} -p ${{ secrets.DO_TOKEN }} ${{ secrets.REGISTRY }}
-          sudo podman pull ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest
+          sudo podman pull ${{ secrets.REGISTRY }}/game-night/game-night:latest
           sudo podman run -d \
             --pod game-night \
             --name game-night-app \
             -e DATABASE_URL=$DATABASE_URL \
-            ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest
+            ${{ secrets.REGISTRY }}/game-night/game-night:latest
 
           sudo podman ps
         "

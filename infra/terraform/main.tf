@@ -1,24 +1,3 @@
-data "digitalocean_ssh_key" "ssh_key_allie" {
-  name = "Allie Laptop"
-}
-
-
-data "digitalocean_ssh_key" "ssh_key_amy" {
-  name = "Amy's Laptop"
-}
-
-data "digitalocean_ssh_key" "ssh_key_automation" {
-  name = "Automation"
-}
-
-data "digitalocean_volume" "game_night_prod" {
-  name = "game-night-prod"
-}
-
-data "digitalocean_volume" "game_night_backup" {
-  name = "game-night-backup"
-}
-
 resource "digitalocean_droplet" "game_night_prod" {
   image  = var.image_id
   name   = "game-night-prod"
@@ -43,7 +22,7 @@ resource "digitalocean_floating_ip" "game_night_prod" {
 }
 
 resource "digitalocean_container_registry" "registry" {
-  name                   = "game-night-registry"
+  name                   = "game-night"
   subscription_tier_slug = "starter"
   region                 = "nyc3"
 }
@@ -84,4 +63,25 @@ sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       "#echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
     ]
   }
+}
+
+data "digitalocean_ssh_key" "ssh_key_allie" {
+  name = "Allie Laptop"
+}
+
+
+data "digitalocean_ssh_key" "ssh_key_amy" {
+  name = "Amy's Laptop"
+}
+
+data "digitalocean_ssh_key" "ssh_key_automation" {
+  name = "Automation"
+}
+
+data "digitalocean_volume" "game_night_prod" {
+  name = "game-night-prod"
+}
+
+data "digitalocean_volume" "game_night_backup" {
+  name = "game-night-backup"
 }

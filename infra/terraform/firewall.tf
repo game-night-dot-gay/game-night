@@ -23,12 +23,6 @@ resource "digitalocean_firewall" "game_night_fw" {
   }
 
   inbound_rule {
-    protocol         = "tcp"
-    port_range       = "2727"
-    source_addresses = ["0.0.0.0/0", "::/0"]
-  }
-
-  inbound_rule {
     protocol         = "icmp"
     source_addresses = ["0.0.0.0/0", "::/0"]
   }
