@@ -45,7 +45,7 @@
 
       packages.game-night-docker = pkgs.dockerTools.buildLayeredImage {
         name = "game-night";
-        tag = "0.1.0";
+        tag = "latest";
         contents = [
           pkgs.bash pkgs.coreutils
         ];
