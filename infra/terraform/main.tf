@@ -57,12 +57,9 @@ sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       "sudo nixos-generate-config",
       "sudo cat /etc/nixos/hardware-configuration.nix",
       "sudo nix-channel --update",
-      <<EOT
-echo "!#/bin/bash\n\n nixos-rebuild switch && nix-env --upgrade --always \n rm -f /nix/var/nix/gcroots/auto/* \n nix-collect-garbage -d \n reboot now \n\n" >> ./switch-and-update.sh
-chmod +x ./switch-and-update.sh
-nohup sudo -b ./switch-and-update.sh
-      EOT
-      ,
+      "echo \"!#/bin/bash\n\n nixos-rebuild switch && nix-env --upgrade --always \n rm -f /nix/var/nix/gcroots/auto/* \n nix-collect-garbage -d \n reboot now \n\n\" >> ./switch-and-update.sh",
+      "chmod +x ./switch-and-update.sh",
+      "nohup sudo -b ./switch-and-update.sh",
     ]
   }
 }
