@@ -57,7 +57,7 @@ sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       "sudo nixos-generate-config",
       "sudo cat /etc/nixos/hardware-configuration.nix",
       "sudo nix-channel --update",
-      "sudo nixos-rebuild switch &", # This restarts the network connection so start in background
+      "sudo nohup nixos-rebuild switch &", # This restarts the network connection so start in background
     ]
   }
 }
