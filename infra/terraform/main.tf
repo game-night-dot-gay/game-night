@@ -61,7 +61,7 @@ sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       "sudo nix-env --upgrade --always",
       "sudo rm -f /nix/var/nix/gcroots/auto/*",
       "sudo nix-collect-garbage -d",
-      "echo 'Terraform remote-exec done!\n"
+      "echo 'Terraform remote-exec done!\n'"
     ]
   }
 }
