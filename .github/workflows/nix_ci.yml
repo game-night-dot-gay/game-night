@@ -67,12 +67,14 @@ jobs:
         # This sed just replaces / with - because merge builds are 'pr#/merge'
         CLEAN_REF_NAME=$(echo $GITHUB_REF_NAME | sed 's/\//-/g')
 
-        docker tag game-night:latest ${{ secrets.REGISTRY }}/game-night-registry/game-night:$CLEAN_REF_NAME
-        docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:$CLEAN_REF_NAME
+        docker tag ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest \
+          ${{ secrets.REGISTRY }}/game-night-registry/game-night:$CLEAN_REF_NAME
+        #docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:$CLEAN_REF_NAME
 
         # git commit SHA hash
-        docker tag game-night:latest ${{ secrets.REGISTRY }}/game-night-registry/game-night:$GITHUB_SHA
-        docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:$GITHUB_SHA
+        docker tag ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest \
+          ${{ secrets.REGISTRY }}/game-night-registry/game-night:$GITHUB_SHA
+        #docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:$GITHUB_SHA
 
     - name: Deploy App
       # Reference: https://blog.benoitblanchon.fr/github-action-run-ssh-commands/
