@@ -29,7 +29,7 @@ resource "digitalocean_record" "prod" {
 resource "digitalocean_record" "send_grid_1" {
   domain = data.digitalocean_domain.game-night-dot-gay.id
   type   = "CNAME"
-  name   = "s1._domainkey.gamenight.gay"
+  name   = "s1._domainkey"
   value  = "s1.domainkey.u26892863.wl114.sendgrid.net."
 }
 
@@ -37,8 +37,8 @@ resource "digitalocean_record" "send_grid_1" {
 resource "digitalocean_record" "send_grid_2" {
   domain = data.digitalocean_domain.game-night-dot-gay.id
   type   = "CNAME"
-  name   = "s2._domainkey.gamenight.gay"
-  value  = "digitalocean_record.base.fqdn"
+  name   = "s2._domainkey"
+  value  = "s2.domainkey.u26892863.wl114.sendgrid.net."
 }
 
 # Send Grid Validation
