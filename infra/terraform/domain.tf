@@ -15,14 +15,14 @@ resource "digitalocean_record" "www" {
   domain = data.digitalocean_domain.game-night-dot-gay.id
   type   = "CNAME"
   name   = "www"
-  value  = digitalocean_record.base.fqdn
+  value  = "gamenight.gay."
 }
 
 resource "digitalocean_record" "prod" {
   domain = data.digitalocean_domain.game-night-dot-gay.id
-  type   = "CNAME"
+  type   = "A"
   name   = "prod"
-  value  = digitalocean_record.base.fqdn
+  value  = digitalocean_floating_ip.game_night_prod.ip_address
 }
 
 # Send Grid Validation
