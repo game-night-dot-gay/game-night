@@ -64,15 +64,12 @@ jobs:
         docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:latest
         
         # ref/branch name tag, especially useful for git semver tagging
-        docker tag game-night:latest ${{ secrets.REGISTRY }}/game-night-registry/game-night:$REF_NAME
-        docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:$REF_NAME
+        docker tag game-night:latest ${{ secrets.REGISTRY }}/game-night-registry/game-night:$GITHUB_REF_NAME
+        docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:$GITHUB_REF_NAME
 
         # git commit SHA hash
-        docker tag game-night:latest ${{ secrets.REGISTRY }}/game-night-registry/game-night:$SHA
-        docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:$SHA
-      env:
-        REF_NAME: ${{ env.GITHUB_REF_NAME }}
-        SHA: ${{ env.GITHUB_SHA }}
+        docker tag game-night:latest ${{ secrets.REGISTRY }}/game-night-registry/game-night:$GITHUB_SHA
+        docker push ${{ secrets.REGISTRY }}/game-night-registry/game-night:$GITHUB_SHA
 
     - name: Deploy App
       # Reference: https://blog.benoitblanchon.fr/github-action-run-ssh-commands/
