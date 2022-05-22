@@ -52,15 +52,16 @@ sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       EOT
       ,
       "sudo cat /etc/nixos/configuration.nix",
+      "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod",
+      "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup",
+      "sudo nixos-generate-config",
+      "sudo cat /etc/nixos/hardware-configuration.nix",
       "sudo nix-channel --update",
       "sudo nixos-rebuild switch",
       "sudo nix-env --upgrade --always",
       "sudo rm -f /nix/var/nix/gcroots/auto/*",
       "sudo nix-collect-garbage -d",
-      "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod",
-      "#echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
-      "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup",
-      "#echo '/dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab",
+      "echo 'Terraform remote-exec done!\n"
     ]
   }
 }
