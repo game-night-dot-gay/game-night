@@ -46,6 +46,12 @@ resource "digitalocean_firewall" "game_night_fw" {
   }
 
   outbound_rule {
+    protocol              = "udp"
+    port_range            = "67"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
     protocol              = "tcp"
     port_range            = "80"
     destination_addresses = ["0.0.0.0/0", "::/0"]
