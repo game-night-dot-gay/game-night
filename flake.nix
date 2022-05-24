@@ -84,6 +84,7 @@
           sqlx-cli
 
           # Typescript / Frontend
+          nodejs
           nodePackages.npm
           nodePackages.yarn
           nodePackages.vue-cli
