@@ -10,6 +10,8 @@
     isSystemUser = true;
   };
 
+  users.users.acme.group = "acme";
+
   services.nginx = {
     enable = true;
 
