@@ -1,4 +1,4 @@
-name: "Terraform CI Tests and Build"
+name: "Terraform"
 
 on:
   pull_request:
@@ -12,13 +12,13 @@ on:
       - infra/terraform/**
       - .github/workflows/terraform.yml
   workflow_run:
-    workflows: [Packer CI Tests and Build]
+    workflows: [Packer]
     types: [completed]
     branches: [main]
 
 jobs:
   terraform:
-    name: Terraform CI Tests and Apply
+    name: CI Tests and Apply
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -60,16 +60,23 @@ jobs:
       run: cd infra/terraform && terraform plan -no-color -input=false
       continue-on-error: true
       env:
-        TF_VAR_image_name: ${{ env.CUSTOM_IMAGE_ID }}
+        TF_VAR_image_id: ${{ env.CUSTOM_IMAGE_ID }}
         TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
+        TF_VAR_ssh_user: ${{ secrets.AUTOMATION_USERNAME }}
+        TF_VAR_ssh_key: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}
 
     - name: Terraform Plan Status
       if: steps.plan.outcome == 'failure'
       run: exit 1
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: cd infra/terraform && terraform apply -auto-approve -input=false
+      if: github.ref == 'refs/heads/main'
+      run: |
+        cd infra/terraform
+        terraform apply -auto-approve -input=false
       env:
-        TF_VAR_image_name: ${{ env.CUSTOM_IMAGE_ID }}
+        TF_LOG: INFO
+        TF_VAR_image_id: ${{ env.CUSTOM_IMAGE_ID }}
         TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
+        TF_VAR_ssh_user: ${{ secrets.AUTOMATION_USERNAME }}
+        TF_VAR_ssh_key: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}

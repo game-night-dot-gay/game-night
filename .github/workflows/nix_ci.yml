@@ -1,4 +1,4 @@
-name: "Nix Flake CI Tests"
+name: "Nix Flake"
 
 on:
   pull_request:
@@ -14,10 +14,14 @@ on:
       - flake.*
       - backend/**
       - frontend/**
+  workflow_run:
+    workflows: [Terraform]
+    types: [completed]
+    branches: [main]
 
 jobs:
   tests:
-    name: Nix Flake Build
+    name: CI Tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -31,6 +35,102 @@ jobs:
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
         # If you chose API tokens for write access OR if you have a private cache
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix build .#game-night-backend
-    - run: nix build .#game-night-frontend
-    - run: nix build .#game-night-docker
+    
+    - name: Build Backend
+      run: nix build .#game-night-backend
+
+    - name: Build Frontend
+      run: nix build .#game-night-frontend
+
+    - name: Build Docker Image
+      run: |
+        nix build .#game-night-docker
+        docker load < result
+        docker image ls | grep -i game-night
+
+    - name: Log in to the Container Registry
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ secrets.REGISTRY }}
+        username: ${{ secrets.DO_TOKEN }}
+        password: ${{ secrets.DO_TOKEN }}
+
+    - name: Push Docker Image
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        # latest tag
+        docker tag game-night:latest ${{ secrets.REGISTRY }}/game-night/game-night:latest
+        docker push ${{ secrets.REGISTRY }}/game-night/game-night:latest
+        
+        # ref/branch name tag, especially useful for git semver tagging
+        # This sed just replaces / with - because merge builds are 'pr#/merge'
+        CLEAN_REF_NAME=$(echo $GITHUB_REF_NAME | sed 's/\//-/g')
+
+        docker tag ${{ secrets.REGISTRY }}/game-night/game-night:latest \
+          ${{ secrets.REGISTRY }}/game-night/game-night:$CLEAN_REF_NAME
+        #docker push ${{ secrets.REGISTRY }}/game-night/game-night:$CLEAN_REF_NAME
+
+        # git commit SHA hash
+        docker tag ${{ secrets.REGISTRY }}/game-night/game-night:latest \
+          ${{ secrets.REGISTRY }}/game-night/game-night:$GITHUB_SHA
+        #docker push ${{ secrets.REGISTRY }}/game-night/game-night:$GITHUB_SHA
+
+    - name: Deploy App
+      # Reference: https://blog.benoitblanchon.fr/github-action-run-ssh-commands/
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        # Setup SSH
+        mkdir -p ~/.ssh/
+        echo "$SSH_KEY" > ~/.ssh/automation.key
+        chmod 600 ~/.ssh/automation.key
+        cat >>~/.ssh/config <<END
+        Host prod
+          HostName $SSH_HOST
+          User $SSH_USER
+          IdentityFile ~/.ssh/automation.key
+          StrictHostKeyChecking no
+        END
+
+        ssh prod "
+          # Stop App and DB if they are running
+          sudo podman stop game-night-app || true
+          sudo podman stop game-night-db || true
+
+          # Create New Pod (removes containers also)
+          sudo podman pod create --replace -p 2727:2727 --name game-night
+
+          # Start Database
+          sudo podman run -d \
+            --pod game-night \
+            --name game-night-db \
+            -e POSTGRES_USER=$POSTGRES_USER \
+            -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+            -e POSTGRES_DB=game-night \
+            -v /mnt/game-night-prod/postgres-data:/var/lib/postgresql/data \
+            docker.io/library/postgres:14.2
+          
+          # Start App
+          sudo podman login -u ${{ secrets.DO_TOKEN }} -p ${{ secrets.DO_TOKEN }} ${{ secrets.REGISTRY }}
+          sudo podman pull ${{ secrets.REGISTRY }}/game-night/game-night:latest
+          sudo podman run -d \
+            --pod game-night \
+            --name game-night-app \
+            -e DATABASE_URL=$DATABASE_URL \
+            ${{ secrets.REGISTRY }}/game-night/game-night:latest
+
+          sudo podman ps
+        "
+
+      env:
+        POSTGRES_USER: ${{ secrets.POSTGRES_PROD_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PROD_PASSWORD }}
+        SSH_USER: ${{ secrets.AUTOMATION_USERNAME }}
+        SSH_USER_PASSWORD: ${{ secrets.AUTOMATION_USER_PASSWORD }}
+        SSH_KEY: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}
+        SSH_HOST: ${{ secrets.PROD_HOSTNAME }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
+
+
+
+

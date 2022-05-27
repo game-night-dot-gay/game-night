@@ -7,8 +7,25 @@ _default:
 build-backend:
   cd backend && cargo build --release
 
+build-frontend:
+  cd frontend && npm run build
+
+build: build-backend build-frontend
+
+build-and-run: build run-app
+
+build-flake-backend:
+  nix build .#game-night-backend
+
+build-flake-frontend:
+  nix build .#game-night-frontend
+
+build-flake-docker:
+  nix build .#game-night-docker
+  docker load < result
+
 run-app:
-  RUST_LOG=info,game_night=trace {{justfile_directory()}}/backend/target/release/game-night
+  RUST_LOG=info,game_night=trace FRONTEND_DIR={{justfile_directory()}}/frontend/dist {{justfile_directory()}}/backend/target/release/game-night
 
 database-start:
   # ensure the data folder exists

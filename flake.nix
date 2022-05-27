@@ -45,18 +45,19 @@
 
       packages.game-night-docker = pkgs.dockerTools.buildLayeredImage {
         name = "game-night";
-        tag = "0.1.0";
+        tag = "latest";
         contents = [
           pkgs.bash pkgs.coreutils
         ];
 
         config = {
           Env = [
-            "VUE_BUNDLE=${packages.game-night-frontend}"
+            "FRONTEND_DIR=${packages.game-night-frontend}"
             "RUST_LOG=info,game_night=debug"
           ];
           Cmd = [ "${packages.game-night-backend}/bin/game-night" ];
           WorkingDir = "/app";
+          ExposedPorts = { "2727" = {}; };
         };
       };
 
@@ -88,7 +89,6 @@
           nodePackages.npm
           nodePackages.yarn
           nodePackages.vue-cli
-          nodePackages.http-server
 
           # Infrastructure
           tfswitch

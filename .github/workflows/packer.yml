@@ -1,4 +1,4 @@
-name: "Packer CI Tests and Build"
+name: "Packer"
 
 on:
   pull_request:
@@ -14,7 +14,7 @@ on:
 
 jobs:
   packer:
-    name: Packer CI Tests and Build
+    name: CI Tests and Build
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -23,6 +23,12 @@ jobs:
     # Note: Hasicorp action does not support `packer fmt -check` yet >_<
     - name: Check Packer Formatting
       run: sudo apt-get install packer && cd infra/images/podman-prod && packer fmt -check .
+
+    - name: Packer Init
+      uses: hashicorp/packer-github-actions@master
+      with:
+        command: init
+        working_directory: infra/images/podman-prod
 
     - name: Validate Packer Templates
       uses: hashicorp/packer-github-actions@master
@@ -43,5 +49,6 @@ jobs:
       env:
         PACKER_LOG: 1
         PKR_VAR_do_token: ${{ secrets.DO_TOKEN }}
+        PKR_VAR_ssh_password: ${{ secrets.ROOT_PASSWORD }}
 
     # TODO - Image cleanup step or job
