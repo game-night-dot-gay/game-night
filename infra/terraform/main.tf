@@ -42,12 +42,12 @@ resource "null_resource" "file_copy" {
   }
 
   provisioner "file" {
-    source      = "../images/podman-prod/configuration.nix"
+    source      = "${path.module}/../images/podman-prod/configuration.nix"
     destination = "/tmp/terraform/configuration.nix"
   }
 
   provisioner "file" {
-    source      = "../images/podman-prod/nginx.nix"
+    source      = "${path.module}/../images/podman-prod/nginx.nix"
     destination = "/tmp/terraform/nginx.nix"
   }
 }
