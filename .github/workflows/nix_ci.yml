@@ -49,7 +49,7 @@ jobs:
         docker image ls | grep -i game-night
 
     - name: Log in to the Container Registry
-      #TODO if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       uses: docker/login-action@v2
       with:
         registry: ${{ secrets.REGISTRY }}
@@ -57,7 +57,7 @@ jobs:
         password: ${{ secrets.DO_TOKEN }}
 
     - name: Push Docker Image
-      #TODO if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
         # latest tag
         docker tag game-night:latest ${{ secrets.REGISTRY }}/game-night/game-night:latest
@@ -78,7 +78,7 @@ jobs:
 
     - name: Deploy App
       # Reference: https://blog.benoitblanchon.fr/github-action-run-ssh-commands/
-      #TODO if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
         # Setup SSH
         mkdir -p ~/.ssh/
