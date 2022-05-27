@@ -27,10 +27,36 @@ resource "digitalocean_container_registry" "registry" {
   region                 = "nyc3"
 }
 
-resource "null_resource" "ssh_provisioner" {
+resource "null_resource" "file_copy" {
 
+  # This will trigger when the ID of the droplet changes (new deploy)
   triggers = {
     droplet_id = digitalocean_droplet.game_night_prod.id
+  }
+
+  connection {
+    type        = "ssh"
+    user        = var.ssh_user
+    private_key = var.ssh_key
+    host        = digitalocean_droplet.game_night_prod.ipv4_address
+  }
+
+  provisioner "file" {
+    source      = "infra/images/podman-prod/configuration.nix"
+    destination = "/tmp/configuration.nix"
+  }
+
+  provisioner "file" {
+    source      = "infra/images/podman-prod/nginx.nix"
+    destination = "/tmp/nginx.nix"
+  }
+}
+
+resource "null_resource" "ssh_provisioner" {
+
+  # This will trigger once the file_copy provisioner runs
+  triggers = {
+    file_copy_id = null_resource.file_copy.id
   }
 
   connection {
@@ -47,6 +73,8 @@ resource "null_resource" "ssh_provisioner" {
   # TODO - Find a better way to solve this so we can remove the sed
   provisioner "remote-exec" {
     inline = [
+      "sudo mv -f /tmp/configuration.nix /etc/nixos/configuration.nix",
+      "sudo mv -f /tmp/nginx.nix /etc/nixos/configuration.nix",
       <<EOT
 sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       EOT
@@ -57,11 +85,16 @@ sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       "sudo nixos-generate-config",
       "sudo cat /etc/nixos/hardware-configuration.nix",
       "sudo nix-channel --update",
+      # Trying this without NoHup again
+      "sudo nixos-rebuild switch",
+      "sudo nix-env --upgrade --always",
+      "sudo rm -f /nix/var/nix/gcroots/auto/* \n nix-collect-garbage -d",
+      "sudo nix-collect-garbage -d ",
       # nixos-rebuild switch restarts sshd and networking so it causes Terraform to disconnect
       # We run this in the background with nohup to let Terraform exit cleanly
-      "echo \"!#/bin/bash\n\n nixos-rebuild switch && nix-env --upgrade --always \n rm -f /nix/var/nix/gcroots/auto/* \n nix-collect-garbage -d \n reboot now \n\n\" >> ./switch-and-update.sh",
-      "chmod +x ./switch-and-update.sh",
-      "nohup sudo -b ./switch-and-update.sh",
+      #"echo \"!#/bin/bash\n\n nixos-rebuild switch && nix-env --upgrade --always \n rm -f /nix/var/nix/gcroots/auto/* \n nix-collect-garbage -d \n reboot now \n\n\" >> ./switch-and-update.sh",
+      #"chmod +x ./switch-and-update.sh",
+      #"nohup sudo -b ./switch-and-update.sh",
     ]
   }
 }

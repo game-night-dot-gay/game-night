@@ -5,6 +5,10 @@
     extraGroups = [ "acme" ];
   };
 
+  users.users.acme = {
+    extraGroups = [ "acme" ];
+  };
+
   services.nginx = {
     enable = true;
 
@@ -53,9 +57,9 @@
     useACMEHost = "gamenight.gay";
     forceSSL = false;
     addSSL = true;
-    sslCertificate = "/var/lib/acme/gamenight.gay/cert.pem";
+    sslCertificate = "/mnt/game-night-prod/certificates/acme/gamenight.gay/cert.pem";
     locations."/.well-known/acme-challenge/" = {
-        root = "/var/lib/acme/acme-challenge";
+        root = "/mnt/game-night-prod/certificates/acme/acme-challenge";
         extraConfig =
             "if ($scheme = 'https') { rewrite ^ http://$http_host$request_uri? permanent; }";
     };
@@ -76,12 +80,17 @@
     };
 };
 
-  security.acme.acceptTerms = true;
-  security.acme.certs = {
-    "gamenight.gay" = {
-      webroot = "/var/lib/acme/acme-challenge";
-      extraDomainNames = [ "www.gamenight.gay" "prod.gamenight.gay" ];
-      email = "admin@gamenight.gay";
-    };
-  };
+  # TODO - Commented out until we can get this to not get us rate limited by LE
+  # Cert is copied and available on the volume
+  # security.acme.acceptTerms = true;
+  # security.acme.renewInterval = "weekly";
+  # security.acme.preliminarySelfsigned = true;
+  # security.acme.certs = {
+  #   "gamenight.gay" = {
+  #     directory = "/mnt/game-night-prod/certificates/acme/<name>";
+  #     webroot = "/mnt/game-night-prod/certificates/acme/acme-challenge";
+  #     extraDomainNames = [ "www.gamenight.gay" "prod.gamenight.gay" ];
+  #     email = "admin@gamenight.gay";
+  #   };
+  # };
 }
