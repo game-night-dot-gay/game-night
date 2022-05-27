@@ -104,6 +104,7 @@ jobs:
           sudo podman run -d \
             --pod game-night \
             --name game-night-db \
+            -e APP_DOMAIN=$APP_DOMAIN \
             -e POSTGRES_USER=$POSTGRES_USER \
             -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
             -e POSTGRES_DB=game-night \
@@ -131,6 +132,7 @@ jobs:
         SSH_USER_PASSWORD: ${{ secrets.AUTOMATION_USER_PASSWORD }}
         SSH_KEY: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}
         SSH_HOST: ${{ secrets.PROD_HOSTNAME }}
+        APP_DOMAIN: ${{ secrets.APP_DOMAIN }}
         DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
         EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
         EMAIL_TOKEN: ${{ secrets.EMAIL_TOKEN }}
