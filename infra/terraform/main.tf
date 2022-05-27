@@ -43,12 +43,12 @@ resource "null_resource" "file_copy" {
 
   provisioner "file" {
     source      = "configuration.nix"
-    destination = "/tmp/configuration.nix"
+    destination = "/tmp/terraform/configuration.nix"
   }
 
   provisioner "file" {
     source      = "nginx.nix"
-    destination = "/tmp/nginx.nix"
+    destination = "/tmp/terraform/nginx.nix"
   }
 }
 
@@ -73,8 +73,8 @@ resource "null_resource" "ssh_provisioner" {
   # TODO - Find a better way to solve this so we can remove the sed
   provisioner "remote-exec" {
     inline = [
-      "sudo mv -f /tmp/configuration.nix /etc/nixos/configuration.nix",
-      "sudo mv -f /tmp/nginx.nix /etc/nixos/configuration.nix",
+      "sudo mv -f /tmp/terraform/configuration.nix /etc/nixos/configuration.nix",
+      "sudo mv -f /tmp/terraform/nginx.nix /etc/nixos/configuration.nix",
       <<EOT
 sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
       EOT
