@@ -12,7 +12,7 @@ npm install -g @vue/cli
 npm install --global http-server
 ```
 
-## Project setup
+## Project Setup
 ```sh
 npm install
 ```
