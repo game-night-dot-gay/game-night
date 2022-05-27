@@ -42,12 +42,12 @@ resource "null_resource" "file_copy" {
   }
 
   provisioner "file" {
-    source      = "${path.module}/../images/podman-prod/configuration.nix"
+    source      = "configuration.nix"
     destination = "/tmp/configuration.nix"
   }
 
   provisioner "file" {
-    source      = "${path.module}/../images/podman-prod/nginx.nix"
+    source      = "nginx.nix"
     destination = "/tmp/nginx.nix"
   }
 }
