@@ -57,7 +57,7 @@
     
 
     virtualHosts = let gameNightConfig = {
-    useACMEHost = "gamenight.gay";
+    #useACMEHost = "gamenight.gay";
     forceSSL = false;
     addSSL = true;
     sslCertificate = "/mnt/game-night-prod/certificates/acme/gamenight.gay/cert.pem";
