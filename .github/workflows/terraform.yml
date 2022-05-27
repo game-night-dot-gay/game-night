@@ -75,6 +75,7 @@ jobs:
         cd infra/terraform
         terraform apply -auto-approve -input=false
       env:
+        TF_LOG: TRACE
         TF_VAR_image_id: ${{ env.CUSTOM_IMAGE_ID }}
         TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
         TF_VAR_ssh_user: ${{ secrets.AUTOMATION_USERNAME }}
