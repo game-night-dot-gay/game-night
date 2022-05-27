@@ -42,13 +42,48 @@
         <circle cx="64" cy="64" r="31" stroke="#760088" />
       </g>
 
-
       <g class="trans-flag" display="none" stroke-width="7.2" fill-opacity="0" mask="url(#piece)">
         <circle cx="64" cy="64" r="60.4" stroke="#5BCFFB" />
         <circle cx="64" cy="64" r="53.2" stroke="#F5ABB9" />
         <circle cx="64" cy="64" r="46.0" stroke="#FFFFFF" />
         <circle cx="64" cy="64" r="38.8" stroke="#F5ABB9" />
         <circle cx="64" cy="64" r="31.6" stroke="#5BCFFB" />
+      </g>
+
+      <g class="non-binary-flag" display="none" stroke-width="9" fill-opacity="0" mask="url(#piece)">
+        <circle cx="64" cy="64" r="59.5" stroke="#FCF431" />
+        <circle cx="64" cy="64" r="50.5" stroke="#FCFCFC" />
+        <circle cx="64" cy="64" r="41.5" stroke="#9D59D2" />
+        <circle cx="64" cy="64" r="32.5" stroke="#282828" />
+      </g>
+
+      <g class="lesbian-flag" display="none" stroke-width="7.2" fill-opacity="0" mask="url(#piece)">
+        <circle cx="64" cy="64" r="60.4" stroke="#D62800" />
+        <circle cx="64" cy="64" r="53.2" stroke="#FF9B56" />
+        <circle cx="64" cy="64" r="46.0" stroke="#FFFFFF" />
+        <circle cx="64" cy="64" r="38.8" stroke="#D462A6" />
+        <circle cx="64" cy="64" r="31.6" stroke="#A40062" />
+      </g>
+
+      <g class="philly-flag" display="none" stroke-width="4.5" fill-opacity="0" mask="url(#piece)">
+        <circle cx="64" cy="64" r="61.75" stroke="#000000" />
+        <circle cx="64" cy="64" r="57.25" stroke="#613915" />
+        <circle cx="64" cy="64" r="52.75" stroke="#E50000" />
+        <circle cx="64" cy="64" r="48.25" stroke="#FF8D00" />
+        <circle cx="64" cy="64" r="43.75" stroke="#FFEE00" />
+        <circle cx="64" cy="64" r="39.25" stroke="#028121" />
+        <circle cx="64" cy="64" r="34.75" stroke="#004CFF" />
+        <circle cx="64" cy="64" r="30.25" stroke="#760088" />
+      </g>
+
+      <g class="agender-flag" display="none" stroke-width="5.14" fill-opacity="0" mask="url(#piece)">
+        <circle cx="64" cy="64" r="61.43" stroke="#000000" />
+        <circle cx="64" cy="64" r="56.29" stroke="#BABABA" />
+        <circle cx="64" cy="64" r="51.15" stroke="#FFFFFF" />
+        <circle cx="64" cy="64" r="46.01" stroke="#BAF484" />
+        <circle cx="64" cy="64" r="40.87" stroke="#FFFFFF" />
+        <circle cx="64" cy="64" r="35.73" stroke="#BABABA" />
+        <circle cx="64" cy="64" r="30.59" stroke="#000000" />
       </g>
     </g>
 
