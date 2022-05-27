@@ -43,12 +43,12 @@ resource "null_resource" "file_copy" {
 
   provisioner "file" {
     source      = "nix/configuration.nix"
-    destination = "/tmp/terraform/configuration.nix"
+    destination = "/tmp/terraform-configuration.nix"
   }
 
   provisioner "file" {
     source      = "nix/nginx.nix"
-    destination = "/tmp/terraform/nginx.nix"
+    destination = "/tmp/terraform-nginx.nix"
   }
 }
 
@@ -68,9 +68,8 @@ resource "null_resource" "ssh_provisioner" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo mv -f /tmp/terraform/configuration.nix /etc/nixos/configuration.nix",
-      "sudo mv -f /tmp/terraform/nginx.nix /etc/nixos/configuration.nix",
-      "sudo cat /etc/nixos/configuration.nix",
+      "sudo mv -f /tmp/terraform-configuration.nix /etc/nixos/configuration.nix",
+      "sudo mv -f /tmp/terraform-nginx.nix /etc/nixos/nginx.nix",
       "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod",
       "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup",
       "sudo nixos-generate-config",
