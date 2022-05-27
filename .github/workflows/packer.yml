@@ -39,7 +39,7 @@ jobs:
         working_directory: infra/images/podman-prod
 
     - name: "Build Image: podman-prod"
-      #TODO Uncomment if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       uses: hashicorp/packer-github-actions@master
       with:
         command: build
