@@ -7,6 +7,7 @@
 
   users.users.acme = {
     extraGroups = [ "acme" ];
+    isSystemUser = true;
   };
 
   services.nginx = {
