@@ -10,6 +10,10 @@
     isSystemUser = true;
   };
 
+  users.groups = {
+    acme = { gid = 995; };
+  };
+  
   users.users.acme.group = "acme";
 
   services.nginx = {
@@ -61,6 +65,7 @@
     forceSSL = false;
     addSSL = true;
     sslCertificate = "/mnt/game-night-prod/certificates/acme/gamenight.gay/cert.pem";
+    sslCertificateKey = "/mnt/game-night-prod/certificates/acme/gamenight.gay/key.pem";
     locations."/.well-known/acme-challenge/" = {
         root = "/mnt/game-night-prod/certificates/acme/acme-challenge";
         extraConfig =
