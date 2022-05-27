@@ -42,12 +42,12 @@ resource "null_resource" "file_copy" {
   }
 
   provisioner "file" {
-    source      = join("/", [abspath(path.cwd), "../images/podman-prod/configuration.nix"])
+    source      = "nix/configuration.nix"
     destination = "/tmp/terraform/configuration.nix"
   }
 
   provisioner "file" {
-    source      = join("/", [abspath(path.cwd), "../images/podman-prod/nginx.nix"])
+    source      = "nix/nginx.nix"
     destination = "/tmp/terraform/nginx.nix"
   }
 }
@@ -66,35 +66,20 @@ resource "null_resource" "ssh_provisioner" {
     host        = digitalocean_droplet.game_night_prod.ipv4_address
   }
 
-  # This sed command is uncommenting the nginx.nix import from the configuration.nix file
-  # so that it will be applied when nixos-rebuild switch is run. This is because
-  # we cannot apply that config during the Packer build or Let's Encrypt validation
-  # will fail.
-  # TODO - Find a better way to solve this so we can remove the sed
   provisioner "remote-exec" {
     inline = [
       "sudo mv -f /tmp/terraform/configuration.nix /etc/nixos/configuration.nix",
       "sudo mv -f /tmp/terraform/nginx.nix /etc/nixos/configuration.nix",
-      <<EOT
-sudo sed -i 's/\#\.\/nginx\.nix/\.\/nginx\.nix/g' /etc/nixos/configuration.nix
-      EOT
-      ,
       "sudo cat /etc/nixos/configuration.nix",
       "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod",
       "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup",
       "sudo nixos-generate-config",
       "sudo cat /etc/nixos/hardware-configuration.nix",
       "sudo nix-channel --update",
-      # Trying this without NoHup again
       "sudo nixos-rebuild switch",
       "sudo nix-env --upgrade --always",
       "sudo rm -f /nix/var/nix/gcroots/auto/* \n nix-collect-garbage -d",
       "sudo nix-collect-garbage -d ",
-      # nixos-rebuild switch restarts sshd and networking so it causes Terraform to disconnect
-      # We run this in the background with nohup to let Terraform exit cleanly
-      #"echo \"!#/bin/bash\n\n nixos-rebuild switch && nix-env --upgrade --always \n rm -f /nix/var/nix/gcroots/auto/* \n nix-collect-garbage -d \n reboot now \n\n\" >> ./switch-and-update.sh",
-      #"chmod +x ./switch-and-update.sh",
-      #"nohup sudo -b ./switch-and-update.sh",
     ]
   }
 }
