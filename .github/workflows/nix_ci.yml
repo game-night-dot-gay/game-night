@@ -11,6 +11,7 @@ on:
     branches:
       - 'main'
     paths:
+      - .github/workflows/nix_ci.yml
       - flake.*
       - backend/**
       - frontend/**
