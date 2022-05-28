@@ -104,7 +104,6 @@ jobs:
           sudo podman run -d \
             --pod game-night \
             --name game-night-db \
-            -e APP_DOMAIN=$APP_DOMAIN \
             -e POSTGRES_USER=$POSTGRES_USER \
             -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
             -e POSTGRES_DB=game-night \
@@ -117,6 +116,7 @@ jobs:
           sudo podman run -d \
             --pod game-night \
             --name game-night-app \
+            -e APP_DOMAIN=$APP_DOMAIN \
             -e DATABASE_URL=$DATABASE_URL \
             -e EMAIL_SENDER=$EMAIL_SENDER \
             -e EMAIL_TOKEN=$EMAIL_TOKEN \
