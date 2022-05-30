@@ -22,8 +22,8 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    User's Browser->>Server: Requests login via "/api/login"
-    Server->>User's Email: Emails magic token link to "/login"
+    User's Browser->>Server: Requests login via "/auth/request_login"
+    Server->>User's Email: Emails magic token link to "/auth/login"
     User's Email->>User's Browser: Opens login link
     User's Browser->>Server: Sends magic token via query paramter
     Note right of Server: Server verifies the token
@@ -81,9 +81,11 @@ The page should have an empty menu bar with the application's name.
 
 ## API
 
-Endpoint                   | Query Params    | Methods |Purpose
----------------------------|-----------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------
-`/login`                   | `token`, `page` | `GET`   | Given `token`, validate the token and redirect the user to `page` (or `/` if empty), setting the `session` cookie to an encrypted, secure cookie
+Endpoint                   | Query Params    | Methods | Purpose
+---------------------------|-----------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+`/auth/request_login`      |                 | `POST`  | Start the login flow by sending an email to the provided email address if it exists in the database
+`/auth/login`              | `token`, `page` | `GET`   | Given `token`, validate the token and redirect the user to `page` (or `/` if empty), setting the `session` cookie to an encrypted, secure cookie and storing the session in the database
+`/auth/logout`             |                 | `GET`   | Given a valid existing session, remove the session from the database, unset the session cookie, and redirect the user to `/login`
 `/api/request_invite`      |                 | `POST`  | Create an invite request for an admin user to approve
 `/api/pending_invites`     |                 | `GET`   | Get a list of pending invites
 `/api/approve_invite/<id>` |                 | `POST`  | Approve an invite request (restricted to admin users)
@@ -106,6 +108,12 @@ erDiagram
         uuid login_id PK
         uuid user_key FK
         string login_token "not null"
+        datetime expires "not null"
+    }
+    SESSIONS {
+        uuid session_id PK
+        uuid user_key FK
+        string session_token "not null"
         datetime expires "not null"
     }
 ```
