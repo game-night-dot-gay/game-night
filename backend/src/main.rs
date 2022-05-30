@@ -1,8 +1,8 @@
 use axum::{
-    extract::Extension,
+    extract::{self, Extension},
     http::StatusCode,
-    response::{IntoResponse, Json},
-    routing::{get, get_service},
+    response::{self, IntoResponse},
+    routing::{get, get_service, post},
     Router,
 };
 use sqlx::postgres::{PgPool, PgPoolOptions};
@@ -18,7 +18,10 @@ mod db;
 mod email;
 
 use crate::config::AppConfig;
-use db::models::User;
+use db::{
+    models::{InsertionUser, User},
+    queries::user::{insert_user, select_all_users},
+};
 use email::SendGridEmailSender;
 
 #[tokio::main]
@@ -78,12 +81,9 @@ async fn main() -> color_eyre::Result<()> {
 
 async fn users_endpoint(
     Extension(pool): Extension<PgPool>,
-) -> axum::response::Result<Json<Vec<User>>> {
-    let users = sqlx::query_as!(User, "SELECT * FROM users")
-        .fetch_all(&pool)
-        .await
-        .map_err(api::error::ApiError::from)?;
-    Ok(Json(users))
+) -> axum::response::Result<response::Json<Vec<User>>> {
+    let users = select_all_users(&pool).await?;
+    Ok(response::Json(users))
 }
 
 async fn handle_error(_err: io::Error) -> impl IntoResponse {

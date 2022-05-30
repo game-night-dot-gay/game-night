@@ -29,5 +29,38 @@
       }
     },
     "query": "SELECT * FROM users"
+  },
+  "5381b6da0baf70e6df5c0ea98f8afb8dfba926c6e15709af6d141350d7391fe2": {
+    "describe": {
+      "columns": [
+        {
+          "name": "user_id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "display_name",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "pronouns",
+          "ordinal": 2,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Text"
+        ]
+      }
+    },
+    "query": "INSERT INTO users (display_name, pronouns) VALUES ($1, $2) RETURNING *"
   }
 }
