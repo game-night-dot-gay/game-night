@@ -1,4 +1,3 @@
-use crate::config::AppConfig;
 use axum::{
     extract::Extension,
     http::StatusCode,
@@ -10,7 +9,7 @@ use sqlx::postgres::{PgPool, PgPoolOptions};
 use std::time::Duration;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::io;
-use tower_http::services::ServeDir;
+use tower_http::services::{ServeDir, ServeFile};
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
 mod api;
@@ -18,6 +17,7 @@ mod config;
 mod db;
 mod email;
 
+use crate::config::AppConfig;
 use db::models::User;
 use email::SendGridEmailSender;
 
@@ -60,9 +60,12 @@ async fn main() -> color_eyre::Result<()> {
         .layer(Extension(pool))
         .layer(Extension(email_sender));
 
+    let frontend_service =
+        ServeDir::new(&frontend_dir).fallback(ServeFile::new(format!("{frontend_dir}/index.html")));
+
     let app = Router::new()
         .nest("/api", api_routes)
-        .fallback(get_service(ServeDir::new(frontend_dir)).handle_error(handle_error))
+        .fallback(get_service(frontend_service).handle_error(handle_error))
         .layer(tower_http::trace::TraceLayer::new_for_http());
 
     tracing::info!("Listening on {addr}");
