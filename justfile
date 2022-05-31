@@ -48,7 +48,7 @@ database-stop:
   docker rm game-night-db
 
 database-shell:
-  docker exec -it game-night-db psql -U postgres game-night-db
+  docker exec -it game-night-db psql -U postgres game-night
 
 database-create:
   sqlx database create

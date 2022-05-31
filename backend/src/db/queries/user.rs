@@ -19,9 +19,11 @@ pub async fn select_all_users(pool: &PgPool) -> Result<Vec<User>, ApiError> {
 pub async fn insert_user(pool: &PgPool, new_user: InsertionUser) -> Result<User, ApiError> {
     let new_user = sqlx::query_as!(
         User,
-        "INSERT INTO users (display_name, pronouns) VALUES ($1, $2) RETURNING *",
+        "INSERT INTO users (display_name, pronouns, email, dietary_needs) VALUES ($1, $2, $3, $4) RETURNING *",
         sanitize(&new_user.display_name),
-        sanitize(&new_user.pronouns)
+        sanitize(&new_user.pronouns),
+        sanitize(&new_user.email),
+        new_user.dietary_needs.map(sanitize),
     )
     .fetch_one(pool)
     .await
