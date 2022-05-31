@@ -17,11 +17,29 @@
           "name": "pronouns",
           "ordinal": 2,
           "type_info": "Text"
+        },
+        {
+          "name": "email",
+          "ordinal": 3,
+          "type_info": "Text"
+        },
+        {
+          "name": "dietary_needs",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "is_admin",
+          "ordinal": 5,
+          "type_info": "Bool"
         }
       ],
       "nullable": [
         false,
         false,
+        false,
+        false,
+        true,
         false
       ],
       "parameters": {
@@ -30,7 +48,7 @@
     },
     "query": "SELECT * FROM users"
   },
-  "5381b6da0baf70e6df5c0ea98f8afb8dfba926c6e15709af6d141350d7391fe2": {
+  "64189c0f3c7e90ca8407fee3a3972cf2d2d62a8909a9a0dab083cfbca62fd39e": {
     "describe": {
       "columns": [
         {
@@ -47,20 +65,40 @@
           "name": "pronouns",
           "ordinal": 2,
           "type_info": "Text"
+        },
+        {
+          "name": "email",
+          "ordinal": 3,
+          "type_info": "Text"
+        },
+        {
+          "name": "dietary_needs",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "is_admin",
+          "ordinal": 5,
+          "type_info": "Bool"
         }
       ],
       "nullable": [
         false,
         false,
+        false,
+        false,
+        true,
         false
       ],
       "parameters": {
         "Left": [
           "Text",
+          "Text",
+          "Text",
           "Text"
         ]
       }
     },
-    "query": "INSERT INTO users (display_name, pronouns) VALUES ($1, $2) RETURNING *"
+    "query": "INSERT INTO users (display_name, pronouns, email, dietary_needs) VALUES ($1, $2, $3, $4) RETURNING *"
   }
 }
