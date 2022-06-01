@@ -16,9 +16,7 @@ build {
 
   provisioner "file" {
     sources = [
-      "configuration.nix",
-      "nginx.nix",
-      "hardware-configuration.nix",
+      "infra/nixos/",
     ]
     destination = "/tmp/"
   }
@@ -27,9 +25,7 @@ build {
     inline = [
       "mkdir -p /mnt/game-night-prod/postgres-data",
       "mkdir -p /mnt/game-night-backup/postgres-data",
-      "cp /tmp/configuration.nix /etc/nixos/configuration.nix",
-      "cp /tmp/nginx.nix /etc/nixos/nginx.nix",
-      "cp /tmp/hardware-configuration.nix /etc/nixos/hardware-configuration.nix",
+      "cp -f /tmp/nixos/*.nix /etc/nixos/",
       "chown -R root:root /etc/nixos/*",
       "chmod 644 /etc/nixos/*",
       "nix-channel --update",
