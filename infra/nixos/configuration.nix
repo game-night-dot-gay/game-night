@@ -30,7 +30,6 @@
   networking.useDHCP = false;
   networking.interfaces.ens3.useDHCP = true; # Digital Ocean NIC 1
   networking.interfaces.ens4.useDHCP = true; # Digital OCean NIC 2
-
  
   # List packages installed in system profile. To search, run:
   # $ nix search wget

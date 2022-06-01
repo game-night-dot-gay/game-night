@@ -1,4 +1,4 @@
-name: "Nixos"
+name: "NixOS"
 
 on:
   push:
