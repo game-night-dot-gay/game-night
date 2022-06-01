@@ -27,36 +27,11 @@ resource "digitalocean_container_registry" "registry" {
   region                 = "nyc3"
 }
 
-resource "null_resource" "file_copy" {
-
-  # This will trigger when the ID of the droplet changes (new deploy)
-  triggers = {
-    droplet_id = digitalocean_droplet.game_night_prod.id
-  }
-
-  connection {
-    type        = "ssh"
-    user        = var.ssh_user
-    private_key = var.ssh_key
-    host        = digitalocean_droplet.game_night_prod.ipv4_address
-  }
-
-  provisioner "file" {
-    source      = "nix/configuration.nix"
-    destination = "/tmp/terraform-configuration.nix"
-  }
-
-  provisioner "file" {
-    source      = "nix/nginx.nix"
-    destination = "/tmp/terraform-nginx.nix"
-  }
-}
-
 resource "null_resource" "ssh_provisioner" {
 
-  # This will trigger once the file_copy provisioner runs
+  # This will trigger when the Droplet id changes (new VM)
   triggers = {
-    file_copy_id = null_resource.file_copy.id
+    file_copy_id = digitalocean_droplet.game_night_prod.id
   }
 
   connection {
@@ -68,8 +43,8 @@ resource "null_resource" "ssh_provisioner" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo mv -f /tmp/terraform-configuration.nix /etc/nixos/configuration.nix",
-      "sudo mv -f /tmp/terraform-nginx.nix /etc/nixos/nginx.nix",
+      "sudo mv -f /etc/nixos/nginx.nix /etc/nixos/nginx-base.nix",
+      "sudo mv -f /etc/nixos/nginx-prod.nix /etc/nixos/nginx.nix",
       "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-prod /mnt/game-night-prod",
       "sudo mount -o discard,defaults,noatime /dev/disk/by-id/scsi-0DO_Volume_game-night-backup /mnt/game-night-backup",
       "sudo nixos-generate-config",

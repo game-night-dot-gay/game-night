@@ -10,11 +10,11 @@
     isSystemUser = true;
   };
 
+  users.users.acme.group = "acme";
+
   users.groups = {
     acme = { gid = 995; };
   };
-  
-  users.users.acme.group = "acme";
 
   services.nginx = {
     enable = true;
@@ -61,11 +61,10 @@
     
 
     virtualHosts = let gameNightConfig = {
-    #useACMEHost = "gamenight.gay";
+    # useACMEHost = "gamenight.gay";
     forceSSL = false;
     addSSL = true;
-    sslCertificate = "/mnt/game-night-prod/certificates/acme/gamenight.gay/cert.pem";
-    sslCertificateKey = "/mnt/game-night-prod/certificates/acme/gamenight.gay/key.pem";
+    sslCertificate = "/mnt/game-night-prod/certificates/acme/gamenight.gay/fullchain.pem";
     locations."/.well-known/acme-challenge/" = {
         root = "/mnt/game-night-prod/certificates/acme/acme-challenge";
         extraConfig =
