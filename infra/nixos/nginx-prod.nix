@@ -57,35 +57,33 @@
     # This might create errors
     proxy_cookie_path / "/; secure; HttpOnly; SameSite=strict";
     '';
-
-    
-
+  
     virtualHosts = let gameNightConfig = {
-    # useACMEHost = "gamenight.gay";
-    forceSSL = false;
-    addSSL = true;
-    sslCertificate = "/mnt/game-night-prod/certificates/acme/gamenight.gay/fullchain.pem";
-    locations."/.well-known/acme-challenge/" = {
-        root = "/mnt/game-night-prod/certificates/acme/acme-challenge";
-        extraConfig =
-            "if ($scheme = 'https') { rewrite ^ http://$http_host$request_uri? permanent; }";
-    };
-    locations."/" = {
-        proxyPass = "http://127.0.0.1:2727";
-        proxyWebsockets = true; # needed if you need to use WebSocket
-        extraConfig =
-        # required when the target is also TLS server with multiple hosts
-        "proxy_ssl_server_name on;" +
-        # required when the server wants to use HTTP Authentication
-        "proxy_pass_header Authorization;";
-        };
+      # useACMEHost = "gamenight.gay";
+      forceSSL = false;
+      addSSL = true;
+      sslCertificate = "/mnt/game-night-prod/certificates/acme/gamenight.gay/fullchain.pem";
+      locations."/.well-known/acme-challenge/" = {
+          root = "/mnt/game-night-prod/certificates/acme/acme-challenge";
+          extraConfig =
+              "if ($scheme = 'https') { rewrite ^ http://$http_host$request_uri? permanent; }";
+      };
+      locations."/" = {
+          proxyPass = "http://127.0.0.1:2727";
+          proxyWebsockets = true; # needed if you need to use WebSocket
+          extraConfig =
+          # required when the target is also TLS server with multiple hosts
+          "proxy_ssl_server_name on;" +
+          # required when the server wants to use HTTP Authentication
+          "proxy_pass_header Authorization;";
+          };
     }; 
     in {
-    "gamenight.gay" = gameNightConfig;
-    "www.gamenight.gay" = gameNightConfig;
-    "prod.gamenight.gay" = gameNightConfig;
+      "gamenight.gay" = gameNightConfig;
+      "www.gamenight.gay" = gameNightConfig;
+      "prod.gamenight.gay" = gameNightConfig;
     };
-};
+  };
 
   # TODO - Commented out until we can get this to not get us rate limited by LE
   # Cert is copied and available on the volume

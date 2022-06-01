@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
     branches: [main]
   workflow_run:
-    workflows: [Nixos]
+    workflows: [NixOS]
     types: [completed]
     branches: [main]
 
