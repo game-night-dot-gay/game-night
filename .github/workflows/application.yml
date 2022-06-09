@@ -1,9 +1,9 @@
-name: "Nix Flake"
+name: "Application"
 
 on:
   pull_request:
     paths:
-      - .github/workflows/nix_ci.yml
+      - .github/workflows/application.yml
       - flake.*
       - backend/**
       - frontend/**
@@ -11,12 +11,14 @@ on:
     branches:
       - 'main'
     paths:
-      - .github/workflows/nix_ci.yml
+      - .github/workflows/application.yml
       - flake.*
       - backend/**
       - frontend/**
+  workflow_dispatch:
+    branches: [main]
   workflow_run:
-    workflows: [Terraform]
+    workflows: [NixOS]
     types: [completed]
     branches: [main]
 

@@ -11,6 +11,8 @@ on:
     paths:
       - infra/terraform/**
       - .github/workflows/terraform.yml
+  workflow_dispatch:
+    branches: [main]
   workflow_run:
     workflows: [Packer]
     types: [completed]
