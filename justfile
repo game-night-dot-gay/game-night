@@ -25,10 +25,11 @@ build-flake-docker:
   docker load < result
 
 run-app:
-  APP_DOMAIN=localhost \
+  APP_BASE_URL='http://localhost:2727' \
     FRONTEND_DIR={{justfile_directory()}}/frontend/dist \
-    EMAIL_SENDER=noreply@gamenight.gay \
-    RUST_LOG=debug,game_night=trace \
+    SENDER_EMAIL=noreply@gamenight.gay \
+    SENDER_NAME='Game Night' \
+    RUST_LOG=debug,h2::proto=warn,game_night=trace \
     {{justfile_directory()}}/backend/target/release/game-night
 
 database-start:

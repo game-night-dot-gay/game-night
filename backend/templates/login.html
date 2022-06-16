@@ -1,5 +1,5 @@
 <html>
     <body>
-        <a href ="https://{{ app_domain }}/login?token={{ magic_token }}">Log in to GameNight</a>
+        <a href ="{{ app_base_url }}/auth/login?token={{ login_token|urlencode }}">Log in to GameNight</a>
     </body>
 </html>

@@ -1,12 +1,12 @@
 use axum::{
-    extract::{self, Extension},
+    extract::Extension,
     http::StatusCode,
-    response::{self, IntoResponse},
+    response::IntoResponse,
     routing::{get, get_service, post},
     Router,
 };
 
-use sqlx::postgres::{PgPool, PgPoolOptions};
+use sqlx::postgres::PgPoolOptions;
 use std::time::Duration;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::io;
@@ -19,11 +19,16 @@ mod config;
 mod db;
 mod email;
 mod telemetry;
+mod token;
 
-use crate::{config::AppConfig, telemetry::init_honeycomb_tracer};
-use db::{
-    models::{InsertionUser, User},
-    queries::user::{insert_user, select_all_users},
+use crate::{
+    api::{
+        auth::{login_endpoint, logout_endpoint, request_login_endpoint},
+        user::{current_user_endpoint, users_endpoint},
+    },
+    config::AppConfig,
+    telemetry::init_honeycomb_tracer,
+    token::SecureTokenProvider,
 };
 use email::SendGridEmailSender;
 
@@ -66,19 +71,28 @@ async fn main() -> color_eyre::Result<()> {
 
     let frontend_dir = config.frontend_dir.clone();
     let config = Arc::new(config);
+    let rng = Arc::new(SecureTokenProvider::new());
+
+    let auth_routes = Router::new()
+        .route("/request_login", post(request_login_endpoint))
+        .route("/login", get(login_endpoint))
+        .route("/logout", get(logout_endpoint));
 
     let api_routes = Router::new()
-        .route("/users", get(users_endpoint))
-        .layer(Extension(config))
-        .layer(Extension(pool))
-        .layer(Extension(email_sender));
+        .route("/current_user", get(current_user_endpoint))
+        .route("/users", get(users_endpoint));
 
     let frontend_service =
         ServeDir::new(&frontend_dir).fallback(ServeFile::new(format!("{frontend_dir}/index.html")));
 
     let app = Router::new()
         .nest("/api", api_routes)
+        .nest("/auth", auth_routes)
         .fallback(get_service(frontend_service).handle_error(handle_error))
+        .layer(Extension(config))
+        .layer(Extension(pool))
+        .layer(Extension(email_sender))
+        .layer(Extension(rng))
         .layer(tower_http::trace::TraceLayer::new_for_http());
 
     tracing::info!("Listening on {addr}");
@@ -89,13 +103,7 @@ async fn main() -> color_eyre::Result<()> {
     Ok(())
 }
 
-async fn users_endpoint(
-    Extension(pool): Extension<PgPool>,
-) -> axum::response::Result<response::Json<Vec<User>>> {
-    let users = select_all_users(&pool).await?;
-    Ok(response::Json(users))
-}
-
-async fn handle_error(_err: io::Error) -> impl IntoResponse {
+async fn handle_error(err: io::Error) -> impl IntoResponse {
+    tracing::error!("Error serving frontend files: {}", err);
     (StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong...")
 }
