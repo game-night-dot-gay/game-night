@@ -4,7 +4,7 @@ use axum::{
 };
 use serde::Serialize;
 
-use crate::email::EmailError;
+use crate::{email::EmailError, token::InvalidTokenError};
 
 #[derive(Debug, Serialize)]
 pub struct ApiError {
@@ -34,6 +34,14 @@ impl From<EmailError> for ApiError {
             EmailError::SendGridError(sg) => Self {
                 message: format!("Email error: {sg}"),
             },
+        }
+    }
+}
+
+impl From<InvalidTokenError> for ApiError {
+    fn from(e: InvalidTokenError) -> Self {
+        Self {
+            message: format!("Token error: {e}"),
         }
     }
 }

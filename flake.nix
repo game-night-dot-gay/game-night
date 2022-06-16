@@ -54,7 +54,7 @@
         config = {
           Env = [
             "FRONTEND_DIR=${packages.game-night-frontend}"
-            "RUST_LOG=info,game_night=debug"
+            "RUST_LOG=info,h2::proto=warn,game_night=debug"
           ];
           Cmd = [ "${packages.game-night-backend}/bin/game-night" ];
           WorkingDir = "/app";
@@ -84,6 +84,8 @@
           rustfmt
           rust-analyzer
           sqlx-cli
+          # Build Dependencies
+          grpc-tools
 
           # Typescript / Frontend
           nodejs

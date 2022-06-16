@@ -1,5 +1,55 @@
 {
   "db": "PostgreSQL",
+  "06088663f31a0714f4c64dcc2328fd8813233ca13b339881020ff28c7382d717": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "DELETE FROM sessions WHERE session_token = $1"
+  },
+  "09732a9f685af667a1aeef95d955eda3ef21d5834e6ad0d31731eb098012abdb": {
+    "describe": {
+      "columns": [
+        {
+          "name": "session_id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "user_key",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "session_token",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "expires",
+          "ordinal": 3,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "SELECT * FROM sessions WHERE session_token = $1"
+  },
   "26e7e05427bc7dabcd7815d27764fda2baf4cfe60a2d2d6ee2a1f773dccbbce2": {
     "describe": {
       "columns": [
@@ -47,6 +97,56 @@
       }
     },
     "query": "SELECT * FROM users"
+  },
+  "476f6a7d2a64ea7c73bb5a00fc05add29ddf4f8857b9acce6316f48d7fcecbab": {
+    "describe": {
+      "columns": [
+        {
+          "name": "user_id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "display_name",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "pronouns",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "email",
+          "ordinal": 3,
+          "type_info": "Text"
+        },
+        {
+          "name": "dietary_needs",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "is_admin",
+          "ordinal": 5,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "SELECT * FROM users where email = $1"
   },
   "64189c0f3c7e90ca8407fee3a3972cf2d2d62a8909a9a0dab083cfbca62fd39e": {
     "describe": {
@@ -100,5 +200,171 @@
       }
     },
     "query": "INSERT INTO users (display_name, pronouns, email, dietary_needs) VALUES ($1, $2, $3, $4) RETURNING *"
+  },
+  "6fc5d57fc29b4cb7ba845890b05d63ae02ef48e9de71453c40c2d5a5824ed936": {
+    "describe": {
+      "columns": [
+        {
+          "name": "login_id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "user_key",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "login_token",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "expires",
+          "ordinal": 3,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Text"
+        ]
+      }
+    },
+    "query": "INSERT INTO pending_logins (user_key, login_token) VALUES ($1, $2) RETURNING *"
+  },
+  "bd01747bc907d22218a992b9a56441c330f9bca568f117ec2878351100ed1698": {
+    "describe": {
+      "columns": [
+        {
+          "name": "login_id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "user_key",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "login_token",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "expires",
+          "ordinal": 3,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "DELETE FROM pending_logins WHERE login_token = $1 RETURNING *"
+  },
+  "ded5e3cd15cd59e287c92fba013d40a9910315f65c79e3f946e6751fb7ad5d6f": {
+    "describe": {
+      "columns": [
+        {
+          "name": "user_id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "display_name",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "pronouns",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "email",
+          "ordinal": 3,
+          "type_info": "Text"
+        },
+        {
+          "name": "dietary_needs",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "is_admin",
+          "ordinal": 5,
+          "type_info": "Bool"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "SELECT * FROM users where user_id = $1"
+  },
+  "eb2f2c3284111d6545e0fb33bda8efe86f4e1638ff554af079ade88a870f934a": {
+    "describe": {
+      "columns": [
+        {
+          "name": "session_id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "user_key",
+          "ordinal": 1,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "session_token",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "expires",
+          "ordinal": 3,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Text"
+        ]
+      }
+    },
+    "query": "INSERT INTO sessions (user_key, session_token) VALUES ($1, $2) RETURNING *"
   }
 }

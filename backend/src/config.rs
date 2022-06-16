@@ -3,11 +3,12 @@ use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct AppConfig {
-    pub app_domain: String,
+    pub app_base_url: String,
     pub port: u16,
     pub database_url: String,
     pub frontend_dir: String,
-    pub email_sender: String,
+    pub sender_email: String,
+    pub sender_name: String,
     pub email_token: String,
     pub tracing_url: String,
     pub tracing_token: String,

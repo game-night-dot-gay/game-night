@@ -19,14 +19,16 @@ pub trait EmailSender {
 
 #[derive(Clone)]
 pub struct SendGridEmailSender {
-    email_sender: String,
+    sender_email: String,
+    sender_name: String,
     client: SGClient,
 }
 
 impl SendGridEmailSender {
     pub fn new(app_config: &AppConfig) -> Self {
         Self {
-            email_sender: app_config.email_sender.to_string(),
+            sender_email: app_config.sender_email.to_string(),
+            sender_name: app_config.sender_name.to_string(),
             client: SGClient::new(&app_config.email_token),
         }
     }
@@ -35,7 +37,8 @@ impl SendGridEmailSender {
 impl Debug for SendGridEmailSender {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("SendGridEmailSender")
-            .field("email_sender", &self.email_sender)
+            .field("sender_email", &self.sender_email)
+            .field("sender_name", &self.sender_name)
             // prevent the client from being logged with the email token
             .field("client", &"<client>")
             .finish()
@@ -57,7 +60,8 @@ impl EmailSender for SendGridEmailSender {
         let subject = template.subject()?;
         let body = template.body()?;
         let mail = Mail::new()
-            .add_from(&self.email_sender)
+            .add_from(&self.sender_email)
+            .add_from_name(&self.sender_name)
             .add_to((to_email.as_str(), to_name.as_str()).into())
             .add_subject(&subject)
             .add_html(&body);
@@ -86,8 +90,8 @@ pub trait AsMail {
 #[derive(Debug, Template)]
 #[template(path = "login.html")]
 pub struct LoginEmail {
-    pub app_domain: String,
-    pub magic_token: String,
+    pub app_base_url: String,
+    pub login_token: String,
 }
 
 impl AsMail for LoginEmail {
@@ -101,8 +105,9 @@ impl AsMail for LoginEmail {
 
     fn text_fallback(&self) -> Result<String, EmailError> {
         Ok(format!(
-            "Log in: https://{}/login?token={}",
-            self.app_domain, self.magic_token
+            "Log in: {}/auth/login?token={}",
+            self.app_base_url,
+            urlencoding::encode(&self.login_token)
         ))
     }
 }

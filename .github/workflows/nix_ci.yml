@@ -118,8 +118,10 @@ jobs:
             --pod game-night \
             --name game-night-app \
             -e APP_DOMAIN=$APP_DOMAIN \
+            -e APP_BASE_URL=$APP_BASE_URL \
             -e DATABASE_URL=$DATABASE_URL \
-            -e EMAIL_SENDER=$EMAIL_SENDER \
+            -e SENDER_EMAIL=$SENDER_EMAIL \
+            -e SENDER_NAME=$SENDER_NAME \
             -e EMAIL_TOKEN=$EMAIL_TOKEN \
             -e TRACING_URL=$TRACING_URL \
             -e TRACING_TOKEN=$TRACING_TOKEN \
@@ -137,8 +139,10 @@ jobs:
         SSH_KEY: ${{ secrets.AUTOMATION_SSH_KEY_PRIVATE }}
         SSH_HOST: ${{ secrets.PROD_HOSTNAME }}
         APP_DOMAIN: ${{ secrets.APP_DOMAIN }}
+        APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
         DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
-        EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+        SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+        SENDER_NAME: ${{ secrets.SENDER_NAME }}
         EMAIL_TOKEN: ${{ secrets.EMAIL_TOKEN }}
         TRACING_URL: ${{ secrets.HONEYCOMB_URL }}
         TRACING_TOKEN: ${{ secrets.HONEYCOMB_TOKEN_PROD }}
