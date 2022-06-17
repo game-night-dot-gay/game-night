@@ -5,11 +5,21 @@ use axum::{
     routing::{get, get_service, post},
     Router,
 };
+use opentelemetry::{
+    sdk::{trace, Resource},
+    trace::Tracer,
+    KeyValue,
+};
+use opentelemetry_otlp::WithExportConfig;
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use std::time::Duration;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::io;
+use tonic::metadata::MetadataMap;
 use tower_http::services::{ServeDir, ServeFile};
+use tracing::{error, span};
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::Registry;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
 mod api;
@@ -28,13 +38,35 @@ use email::SendGridEmailSender;
 async fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
 
-    let json_layer = fmt::layer().json();
+    let config = AppConfig::intialize()?;
+
+    let mut map = MetadataMap::with_capacity(1);
+
+    map.insert("x-honeycomb-team", config.tracing_token.parse()?);
+
+
+    let tracer = opentelemetry_otlp::new_pipeline()
+        .tracing()
+        .with_exporter(
+            opentelemetry_otlp::new_exporter()
+                .tonic()
+                .with_endpoint(&config.tracing_url)
+                .with_metadata(map),
+        )
+        .with_trace_config(
+            trace::config().with_resource(Resource::new(vec![KeyValue::new(
+                "service.name",
+                "game-night",
+            )])),
+        )
+        .install_simple()?;
+
+    let telemetry = tracing_opentelemetry::layer().with_tracer(tracer);
+
     tracing_subscriber::registry()
-        .with(json_layer)
+        .with(telemetry)
         .with(EnvFilter::from_default_env())
         .init();
-
-    let config = AppConfig::intialize()?;
 
     let pool = PgPoolOptions::new()
         .max_connections(5)
