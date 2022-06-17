@@ -1556,12 +1556,12 @@
     webpack "^5.54.0"
     workbox-webpack-plugin "^6.1.0"
 
-"@vue/cli-plugin-router@^5.0.4", "@vue/cli-plugin-router@~5.0.4":
-  version "5.0.4"
-  resolved "https://registry.npmjs.org/@vue/cli-plugin-router/-/cli-plugin-router-5.0.4.tgz"
-  integrity sha512-lylzCuH3Br0BcTz5IxxSffpyoF9dQ2k4jTdK8QlWrnRanWGw7P9C0kYMr9rohHaXpvAlu6bio392gbNIWpEepg==
+"@vue/cli-plugin-router@^5.0.4", "@vue/cli-plugin-router@~5.0.6":
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-router/-/cli-plugin-router-5.0.6.tgz#b65d39845a8a53dc51b9c263bf75bdd24a53d8be"
+  integrity sha512-5ikUdfsSoKqpBhB5GhGYijH6mJnU+ZGqDv3QBf0brDeeh7PhClntxNAOLkB73c+LNxjBrlNCTkItuByF+AD29w==
   dependencies:
-    "@vue/cli-shared-utils" "^5.0.4"
+    "@vue/cli-shared-utils" "^5.0.6"
 
 "@vue/cli-plugin-typescript@~5.0.6":
   version "5.0.6"
