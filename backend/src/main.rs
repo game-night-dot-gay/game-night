@@ -1,4 +1,3 @@
-use ammonia::Url;
 use axum::{
     extract::{self, Extension},
     http::StatusCode,
@@ -6,22 +5,14 @@ use axum::{
     routing::{get, get_service, post},
     Router,
 };
-use opentelemetry::{
-    sdk::{trace, Resource},
-    trace::Tracer,
-    KeyValue,
-};
-use opentelemetry_otlp::WithExportConfig;
+
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use std::time::Duration;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::io;
-use tonic::{metadata::MetadataMap, transport::ClientTlsConfig};
 use tower_http::services::{ServeDir, ServeFile};
-use tracing::{error, span};
 use tracing_subscriber::layer::SubscriberExt;
-use tracing_subscriber::Registry;
-use tracing_subscriber::{fmt, prelude::*, EnvFilter};
+use tracing_subscriber::{prelude::*, EnvFilter};
 
 mod api;
 mod config;
@@ -29,7 +20,10 @@ mod db;
 mod email;
 mod telemetry;
 
-use crate::config::AppConfig;
+use crate::{
+    config::AppConfig,
+    telemetry::{init_honeycomb_tracer, HoneycombConfig},
+};
 use db::{
     models::{InsertionUser, User},
     queries::user::{insert_user, select_all_users},
@@ -42,34 +36,11 @@ async fn main() -> color_eyre::Result<()> {
 
     let config = AppConfig::intialize()?;
 
-    let mut map = MetadataMap::with_capacity(1);
-
-    map.insert("x-honeycomb-team", config.tracing_token.parse()?);
-
-    let endpoint = Url::parse(&config.tracing_url)?;
-
-    let tracer = opentelemetry_otlp::new_pipeline()
-        .tracing()
-        .with_exporter(
-            opentelemetry_otlp::new_exporter()
-                .tonic()
-                .with_endpoint(&config.tracing_url)
-                .with_metadata(map)
-                .with_tls_config(
-                    ClientTlsConfig::new().domain_name(
-                        endpoint
-                            .host_str()
-                            .expect("the specified endpoint should have a valid hostname"),
-                    ),
-                ),
-        )
-        .with_trace_config(
-            trace::config().with_resource(Resource::new(vec![KeyValue::new(
-                "service.name",
-                "game-night",
-            )])),
-        )
-        .install_batch(opentelemetry::runtime::Tokio)?;
+    let tracer = init_honeycomb_tracer(HoneycombConfig {
+        endpoint: config.tracing_url.clone(),
+        service_name: config.service_name.clone(),
+        token: config.tracing_token.clone(),
+    })?;
 
     let telemetry = tracing_opentelemetry::layer().with_tracer(tracer);
 

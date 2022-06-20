@@ -11,6 +11,7 @@ pub struct AppConfig {
     pub email_token: String,
     pub tracing_url: String,
     pub tracing_token: String,
+    pub service_name: String,
 }
 
 impl AppConfig {
@@ -18,6 +19,7 @@ impl AppConfig {
         let config = Config::builder()
             .set_default("port", "2727")?
             .set_default("tracing_url", "https://api.honeycomb.io")?
+            .set_default("service_name", "game-night")?
             .add_source(File::with_name("app_config").required(false))
             .add_source(Environment::default().try_parsing(true))
             .build()?;
