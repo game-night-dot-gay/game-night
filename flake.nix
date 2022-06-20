@@ -48,7 +48,7 @@
         name = "game-night";
         tag = "latest";
         contents = [
-          pkgs.bash pkgs.coreutils
+          pkgs.bash pkgs.coreutils pkgs.cacert
         ];
 
         config = {
