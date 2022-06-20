@@ -20,10 +20,7 @@ mod db;
 mod email;
 mod telemetry;
 
-use crate::{
-    config::AppConfig,
-    telemetry::{init_honeycomb_tracer, HoneycombConfig},
-};
+use crate::{config::AppConfig, telemetry::init_honeycomb_tracer};
 use db::{
     models::{InsertionUser, User},
     queries::user::{insert_user, select_all_users},
@@ -36,11 +33,11 @@ async fn main() -> color_eyre::Result<()> {
 
     let config = AppConfig::intialize()?;
 
-    let tracer = init_honeycomb_tracer(HoneycombConfig {
-        endpoint: config.tracing_url.clone(),
-        service_name: config.service_name.clone(),
-        token: config.tracing_token.clone(),
-    })?;
+    let tracer = init_honeycomb_tracer(
+        config.tracing_url.clone(),
+        config.tracing_token.clone(),
+        config.tracing_service.clone(),
+    )?;
 
     let telemetry = tracing_opentelemetry::layer().with_tracer(tracer);
 
