@@ -121,6 +121,9 @@ jobs:
             -e DATABASE_URL=$DATABASE_URL \
             -e EMAIL_SENDER=$EMAIL_SENDER \
             -e EMAIL_TOKEN=$EMAIL_TOKEN \
+            -e TRACING_URL=$TRACING_URL \
+            -e TRACING_TOKEN=$TRACING_TOKEN \
+            -e TRACING_SERVICE=$TRACING_SERVICE \
             ${{ secrets.REGISTRY }}/game-night/game-night:latest
 
           sudo podman ps
@@ -137,6 +140,9 @@ jobs:
         DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
         EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
         EMAIL_TOKEN: ${{ secrets.EMAIL_TOKEN }}
+        TRACING_URL: ${{ secrets.HONEYCOMB_URL }}
+        TRACING_TOKEN: ${{ secrets.HONEYCOMB_TOKEN_PROD }}
+        TRACING_SERVICE: game-night
 
 
 

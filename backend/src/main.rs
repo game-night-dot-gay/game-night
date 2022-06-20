@@ -5,19 +5,22 @@ use axum::{
     routing::{get, get_service, post},
     Router,
 };
+
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use std::time::Duration;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::io;
 use tower_http::services::{ServeDir, ServeFile};
-use tracing_subscriber::{fmt, prelude::*, EnvFilter};
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::{prelude::*, EnvFilter};
 
 mod api;
 mod config;
 mod db;
 mod email;
+mod telemetry;
 
-use crate::config::AppConfig;
+use crate::{config::AppConfig, telemetry::init_honeycomb_tracer};
 use db::{
     models::{InsertionUser, User},
     queries::user::{insert_user, select_all_users},
@@ -28,13 +31,20 @@ use email::SendGridEmailSender;
 async fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
 
-    let json_layer = fmt::layer().json();
+    let config = AppConfig::intialize()?;
+
+    let tracer = init_honeycomb_tracer(
+        config.tracing_url.clone(),
+        config.tracing_token.clone(),
+        config.tracing_service.clone(),
+    )?;
+
+    let telemetry = tracing_opentelemetry::layer().with_tracer(tracer);
+
     tracing_subscriber::registry()
-        .with(json_layer)
+        .with(telemetry)
         .with(EnvFilter::from_default_env())
         .init();
-
-    let config = AppConfig::intialize()?;
 
     let pool = PgPoolOptions::new()
         .max_connections(5)
