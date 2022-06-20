@@ -1,3 +1,4 @@
+use ammonia::Url;
 use axum::{
     extract::{self, Extension},
     http::StatusCode,
@@ -15,7 +16,7 @@ use sqlx::postgres::{PgPool, PgPoolOptions};
 use std::time::Duration;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::io;
-use tonic::metadata::MetadataMap;
+use tonic::{metadata::MetadataMap, transport::ClientTlsConfig};
 use tower_http::services::{ServeDir, ServeFile};
 use tracing::{error, span};
 use tracing_subscriber::layer::SubscriberExt;
@@ -26,6 +27,7 @@ mod api;
 mod config;
 mod db;
 mod email;
+mod telemetry;
 
 use crate::config::AppConfig;
 use db::{
@@ -44,6 +46,7 @@ async fn main() -> color_eyre::Result<()> {
 
     map.insert("x-honeycomb-team", config.tracing_token.parse()?);
 
+    let endpoint = Url::parse(&config.tracing_url)?;
 
     let tracer = opentelemetry_otlp::new_pipeline()
         .tracing()
@@ -51,7 +54,14 @@ async fn main() -> color_eyre::Result<()> {
             opentelemetry_otlp::new_exporter()
                 .tonic()
                 .with_endpoint(&config.tracing_url)
-                .with_metadata(map),
+                .with_metadata(map)
+                .with_tls_config(
+                    ClientTlsConfig::new().domain_name(
+                        endpoint
+                            .host_str()
+                            .expect("the specified endpoint should have a valid hostname"),
+                    ),
+                ),
         )
         .with_trace_config(
             trace::config().with_resource(Resource::new(vec![KeyValue::new(
@@ -59,7 +69,7 @@ async fn main() -> color_eyre::Result<()> {
                 "game-night",
             )])),
         )
-        .install_simple()?;
+        .install_batch(opentelemetry::runtime::Tokio)?;
 
     let telemetry = tracing_opentelemetry::layer().with_tracer(tracer);
 
