@@ -14,6 +14,7 @@
       packages.game-night-backend = naersk-lib.buildPackage {
         pname = "game-night-backend";
         root = ./backend;
+        nativeBuildInputs = [pkgs.grpc-tools];
         doCheck = true;
       };
 
