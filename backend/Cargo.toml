@@ -15,7 +15,7 @@ eyre = "0.6.8"
 opentelemetry = { version = "0.17.0", features = ["metrics", "serialize", "rt-tokio"] }
 opentelemetry-otlp = { version = "0.10.0", features = ["tonic", "metrics", "tls", "tls-roots"] }
 sendgrid = { version = "0.17.4", default-features = false, features = ["async", "rustls"] }
-serde = "1.0.137"
+serde = "1.0.138"
 serde_json = "1.0.82"
 sqlx = { version = "0.6.0", features = ["runtime-tokio-rustls", "macros", "migrate", "uuid", "time", "json", "tls", "offline", "postgres"] }
 tonic = { version = "0.6.2", features = ["tls", "tls-roots"] } # tonic kept in sync with tracing-opentelemetry
