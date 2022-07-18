@@ -12,7 +12,7 @@ axum = { version = "0.5.12", features = ["headers", "http2"] }
 base64 = "0.13.0"
 color-eyre = "0.6.2"
 config = { version = "0.13.1", default-features = false, features = ["toml"] }
-constant_time_eq = "0.2.2"
+constant_time_eq = "0.2.3"
 eyre = "0.6.8"
 http = "0.2.8"
 opentelemetry = { version = "0.17.0", features = ["metrics", "serialize", "rt-tokio"] }

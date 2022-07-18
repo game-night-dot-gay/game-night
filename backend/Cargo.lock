@@ -315,9 +315,9 @@ dependencies = [
 
 [[package]]
 name = "constant_time_eq"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e31aa570361918e61453e3b5377976b23e4599e8bb5b840380ecd3a20e691d2"
+checksum = "8b96535642698e10693d204abac955eb269a05ea99f8363ef70ab54cfe439337"
 
 [[package]]
 name = "core-foundation"
