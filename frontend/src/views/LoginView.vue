@@ -2,7 +2,7 @@
   <FlagLogo />
   <div class="login">
     <label>Email:</label>
-    <input v-model="email" />
+    <input v-model.trim="email" @keyup.enter="requestLogin" />
     <button id="request-login-button" @click="requestLogin">Login</button>
     <div id="submission-message" :class="submissionClass">
       Check your email for the login link.
@@ -11,6 +11,9 @@
 </template>
 
 <style>
+.login {
+  padding: 1em;
+}
 #submission-message {
   display: none;
 }
@@ -30,6 +33,7 @@ export default defineComponent({
     return {
       email: "",
       submitted: false,
+      submitting: false,
     };
   },
   computed: {
@@ -44,13 +48,28 @@ export default defineComponent({
   },
   methods: {
     requestLogin() {
+      if (this.submitting) {
+        return;
+      }
       console.log(this.email);
 
+      this.submitting = true;
       const requestLoginButton = document.getElementById(
         "request-login-button"
       );
       requestLoginButton?.setAttribute("disabled", "");
       this.submitted = true;
+
+      fetch("/auth/request_login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: this.email }),
+      }).then((r) => {
+        console.log(r);
+        this.submitting = false;
+        requestLoginButton?.removeAttribute("disabled");
+        this.email = "";
+      });
     },
   },
 });

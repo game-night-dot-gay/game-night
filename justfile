@@ -4,11 +4,19 @@ set export
 _default:
   @just --list
 
+format-backend:
+  cd backend && cargo fmt
+
 build-backend:
   cd backend && cargo build --release
 
+format-frontend:
+  cd frontend && npm run lint
+
 build-frontend:
   cd frontend && npm run build
+
+format: format-backend format-frontend
 
 build: build-backend build-frontend
 
