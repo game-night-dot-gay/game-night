@@ -19,6 +19,7 @@ impl IntoResponse for ApiError {
 
 impl From<sqlx::error::Error> for ApiError {
     fn from(e: sqlx::error::Error) -> Self {
+        tracing::error!("Database error: {e}");
         Self {
             message: format!("Database error: {e}"),
         }
@@ -27,19 +28,21 @@ impl From<sqlx::error::Error> for ApiError {
 
 impl From<EmailError> for ApiError {
     fn from(e: EmailError) -> Self {
-        match e {
-            EmailError::TemplateRenderError(tre) => Self {
-                message: format!("Email template error: {tre}"),
-            },
-            EmailError::SendGridError(sg) => Self {
-                message: format!("Email error: {sg}"),
-            },
-        }
+        let message = match e {
+            EmailError::TemplateRenderError(tre) => format!("Email template error: {tre}"),
+
+            EmailError::SendGridError(sg) => format!("Email error: {sg}"),
+        };
+
+        tracing::error!("EmailError {message}");
+
+        Self { message }
     }
 }
 
 impl From<InvalidTokenError> for ApiError {
     fn from(e: InvalidTokenError) -> Self {
+        tracing::error!("Token error: {e}");
         Self {
             message: format!("Token error: {e}"),
         }
