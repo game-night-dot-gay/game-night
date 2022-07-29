@@ -90,6 +90,8 @@ pub async fn login_endpoint(
     let Extension(token_provider) = token_provider;
     let pending_login_token = Token::from_base64(login_query.token).map_err(ApiError::from)?;
     let pending_login = pending_login_for_token(&pool, &pending_login_token).await?;
+    tracing::trace!("Found pending login for {}", pending_login.user_key);
+
     let now = OffsetDateTime::now_utc();
     if now.cmp(&pending_login.expires) == Ordering::Greater {
         tracing::debug!("Pending login expired for {}", pending_login.user_key);
@@ -100,6 +102,8 @@ pub async fn login_endpoint(
     }
 
     let session = create_session(&pool, token_provider.as_ref(), &pending_login).await?;
+    tracing::trace!("Created session for {}", session.user_key);
+
     let session_token = Token::from_base64(session.session_token).map_err(ApiError::from)?;
 
     let redirect_url = login_query.redirect_url.unwrap_or("/".to_string());
@@ -107,6 +111,8 @@ pub async fn login_endpoint(
     session_token
         .set_cookie(redirect.headers_mut())
         .map_err(ApiError::from)?;
+    tracing::trace!("Set session token header for {}", session.user_key);
+
     Ok(redirect)
 }
 

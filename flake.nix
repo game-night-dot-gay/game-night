@@ -54,7 +54,7 @@
         config = {
           Env = [
             "FRONTEND_DIR=${packages.game-night-frontend}"
-            "RUST_LOG=info,h2::proto=warn,game_night=debug"
+            "RUST_LOG=debug,h2::proto=warn,game_night=trace"
           ];
           Cmd = [ "${packages.game-night-backend}/bin/game-night" ];
           WorkingDir = "/app";
