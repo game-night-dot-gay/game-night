@@ -1,1 +1,1 @@
-disableTools = ["ESLint", "Bill Of Materials", "Open Source Vulnerabilities"]
+disableTools = ["ESLint", "Bill Of Materials"]
