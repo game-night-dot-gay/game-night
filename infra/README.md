@@ -74,7 +74,7 @@ curl -X GET \
 
 1. SSH to a running instance
 1. `nano /etc/nixos/nginx.nix`
-1. Uncomment the commented out config lines
+1. Make the following changes
 
 ```nix
 virtualHosts = let gameNightConfig = {
@@ -129,6 +129,6 @@ cp -R /var/lib/acme/ /mnt/game-night-prod/certificates/
 chown -R acme:acme /mnt/game-night-prod/certificates/acme
 ```
 
-1. Revert lines in `/etc/nix/nginx.nix` again so we don't get rate limited (revert to what's in the repo) and `nixos-rebuild switch
+1. Revert `/etc/nix/nginx.nix` to what's in the repoagain so we don't get rate limited and `nixos-rebuild switch`
 1. Test to verify cert is updated in the browser at <https://gamenight.gay>
 1. ALLIE FIX THIS FOR THE LOVE OF RUST! --Sincerely Allie
