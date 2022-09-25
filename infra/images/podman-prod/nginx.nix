@@ -7,6 +7,19 @@
 
   users.users.acme = {
     extraGroups = [ "acme" ];
+    isSystemUser = true;
+  };
+
+  users.groups = {
+    acme = { gid = 995; };
+  };
+
+  users.users.acme.group = "acme";
+
+  # Workaround so the Let's Encrypt cert gets stored on the network
+  fileSystems."/var/lib/acme" = {
+    device = "/mnt/game-night-prod/certificates/acme";
+    options = [ "bind" ];
   };
 
   services.nginx = {
@@ -59,9 +72,8 @@
           useACMEHost = "gamenight.gay";
           forceSSL = false;
           addSSL = true;
-          sslCertificate = "/mnt/game-night-prod/certificates/acme/gamenight.gay/cert.pem";
           locations."/.well-known/acme-challenge/" = {
-            root = "/mnt/game-night-prod/certificates/acme/acme-challenge";
+            root = "/var/lib/acme/.challenges";
             extraConfig =
               "if ($scheme = 'https') { rewrite ^ http://$http_host$request_uri? permanent; }";
           };
@@ -83,17 +95,15 @@
       };
   };
 
-  # TODO - Commented out until we can get this to not get us rate limited by LE
-  # Cert is copied and available on the volume
-  # security.acme.acceptTerms = true;
-  # security.acme.renewInterval = "weekly";
-  # security.acme.preliminarySelfsigned = true;
-  # security.acme.certs = {
-  #   "gamenight.gay" = {
-  #     directory = "/mnt/game-night-prod/certificates/acme/<name>";
-  #     webroot = "/mnt/game-night-prod/certificates/acme/acme-challenge";
-  #     extraDomainNames = [ "www.gamenight.gay" "prod.gamenight.gay" ];
-  #     email = "admin@gamenight.gay";
-  #   };
-  # };
+
+  security.acme.acceptTerms = true;
+  security.acme.renewInterval = "weekly";
+  security.acme.preliminarySelfsigned = true;
+  security.acme.certs = {
+    "gamenight.gay" = {
+      webroot = "/var/lib/acme/.challenges";
+      extraDomainNames = [ "www.gamenight.gay" "prod.gamenight.gay" ];
+      email = "admin@gamenight.gay";
+    };
+  };
 }
