@@ -97,6 +97,9 @@
           tfswitch
           packer
 
+          # Nix
+          nixpkgs-fmt
+
         ];
 
         RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";

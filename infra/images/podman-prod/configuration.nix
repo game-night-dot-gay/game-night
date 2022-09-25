@@ -6,7 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
 
       # This is commented out as it cannot be run during the Packer
@@ -32,7 +33,7 @@
   networking.useDHCP = false;
   networking.interfaces.ens3.useDHCP = true; # Digital Ocean NIC 1
   networking.interfaces.ens4.useDHCP = true; # Digital OCean NIC 2
-  
+
   # Define a user accounts
   users.mutableUsers = false; # So we can blow away any set passwords
 
@@ -78,36 +79,44 @@
   # Temporary until I can lock this down better
   security.sudo.wheelNeedsPassword = false;
   security.sudo.extraRules = [
-    { users = [ "automation" ]; 
-      commands = [ { 
-        command = "/run/current-system/sw/bin/podman"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "/run/wrappers/bin/mount"; 
-        options = [ "NOPASSWD" ]; } 
-        { 
-        command = "/run/current-system/sw/bin/tee"; 
-        options = [ "NOPASSWD" ]; } 
-        { 
-        command = "/run/current-system/sw/bin/nixos-rebuild"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "/run/current-system/sw/bin/nix-channel"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "/run/current-system/sw/bin/nix-env"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "/run/current-system/sw/bin/rm -f /nix/var/nix/gcroots/auto/*"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "/run/current-system/sw/bin/nix-collect-garbage"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "/run/current-system/sw/bin/sed"; 
-        options = [ "NOPASSWD" ]; }
-
-      ]; 
+    {
+      users = [ "automation" ];
+      commands = [{
+        command = "/run/current-system/sw/bin/podman";
+        options = [ "NOPASSWD" ];
+      }
+        {
+          command = "/run/wrappers/bin/mount";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/tee";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/nixos-rebuild";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/nix-channel";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/nix-env";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/rm -f /nix/var/nix/gcroots/auto/*";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/nix-collect-garbage";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/current-system/sw/bin/sed";
+          options = [ "NOPASSWD" ];
+        }];
     }
   ];
 
@@ -126,9 +135,9 @@
 
   virtualisation = {
     podman = {
-     enable = true;
-  
-     dockerCompat = true;
+      enable = true;
+
+      dockerCompat = true;
     };
   };
 
