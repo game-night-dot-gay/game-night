@@ -6,7 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
@@ -25,12 +26,12 @@
   networking.interfaces.enp1s0.useDHCP = true; # Laptop Qemu/KVM NIC
   networking.interfaces.ens3.useDHCP = true; # Digital Ocean NIC 1
   networking.interfaces.ens4.useDHCP = true; # Digital OCean NIC 2
-  
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.mutableUsers = false; # So we can blow away any set passwords
-  
+
   users.users.root.hashedPassword = "$6$/Rkez4AJT4Dlsz2x$qQpfdUtAwuWJYH5tIlaxAhJp06JVlUA4rK4gDmfy7nwBHiHkJK1PtnGJa8xgv3o4fhtY0CxcuInIJ.41efWrM.";
-  
+
   users.users.allie = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "podman" ];
@@ -76,16 +77,16 @@
 
   virtualisation = {
     podman = {
-     enable = true;
-  
-     dockerCompat = true;
+      enable = true;
+
+      dockerCompat = true;
     };
   };
 
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  services.openssh ={ 
+  services.openssh = {
     enable = true;
     permitRootLogin = "yes";
   };
