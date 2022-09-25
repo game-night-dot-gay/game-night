@@ -76,58 +76,58 @@ curl -X GET \
 1. `nano /etc/nixos/nginx.nix`
 1. Make the following changes
 
-```nix
-virtualHosts = let gameNightConfig = {
-    useACMEHost = "gamenight.gay";
-    forceSSL = false;
-    addSSL = true;
-#    sslCertificate = "/mnt/game-night-prod/certificates/acme/gamenight.gay/fullchain.pem";
-#    sslCertificateKey = "/mnt/game-night-prod/certificates/acme/gamenight.gay/key.pem";
-    locations."/.well-known/acme-challenge/" = {
-       root = "/var/lib/acme/.challenges";
-        extraConfig =
-            "if ($scheme = 'https') { rewrite ^ http://$http_host$request_uri? permanent; }";
-    };
-    locations."/" = {
-        proxyPass = "http://127.0.0.1:2727";
-        proxyWebsockets = true; # needed if you need to use WebSocket
-        extraConfig =
-        # required when the target is also TLS server with multiple hosts
-        "proxy_ssl_server_name on;" +
-        # required when the server wants to use HTTP Authentication
-        "proxy_pass_header Authorization;";
+    ```nix
+    virtualHosts = let gameNightConfig = {
+        useACMEHost = "gamenight.gay";
+        forceSSL = false;
+        addSSL = true;
+    #    sslCertificate = "/mnt/game-night-prod/certificates/acme/gamenight.gay/fullchain.pem";
+    #    sslCertificateKey = "/mnt/game-night-prod/certificates/acme/gamenight.gay/key.pem";
+        locations."/.well-known/acme-challenge/" = {
+           root = "/var/lib/acme/.challenges";
+            extraConfig =
+                "if ($scheme = 'https') { rewrite ^ http://$http_host$request_uri? permanent; }";
         };
-    }; 
-    in {
-    "gamenight.gay" = gameNightConfig;
-    "www.gamenight.gay" = gameNightConfig;
-    "prod.gamenight.gay" = gameNightConfig;
+        locations."/" = {
+            proxyPass = "http://127.0.0.1:2727";
+            proxyWebsockets = true; # needed if you need to use WebSocket
+            extraConfig =
+            # required when the target is also TLS server with multiple hosts
+            "proxy_ssl_server_name on;" +
+            # required when the server wants to use HTTP Authentication
+            "proxy_pass_header Authorization;";
+            };
+        }; 
+        in {
+        "gamenight.gay" = gameNightConfig;
+        "www.gamenight.gay" = gameNightConfig;
+        "prod.gamenight.gay" = gameNightConfig;
+        };
     };
-};
-
-  # TODO - Commented out until we can get this to not get us rate limited by LE
-  # Cert is copied and available on the volume
-   security.acme.acceptTerms = true;
-   security.acme.renewInterval = "weekly";
-   security.acme.preliminarySelfsigned = true;
-   security.acme.certs = {
-     "gamenight.gay" = {
- #      directory = "/mnt/game-night-prod/certificates/acme/gamenight.gay";
-       webroot = "/var/lib/acme/.challenges";
-       extraDomainNames = [ "www.gamenight.gay" "prod.gamenight.gay" ];
-       email = "admin@gamenight.gay";
-     };
-   };
-```
+    
+      # TODO - Commented out until we can get this to not get us rate limited by LE
+      # Cert is copied and available on the volume
+       security.acme.acceptTerms = true;
+       security.acme.renewInterval = "weekly";
+       security.acme.preliminarySelfsigned = true;
+       security.acme.certs = {
+         "gamenight.gay" = {
+     #      directory = "/mnt/game-night-prod/certificates/acme/gamenight.gay";
+           webroot = "/var/lib/acme/.challenges";
+           extraDomainNames = [ "www.gamenight.gay" "prod.gamenight.gay" ];
+           email = "admin@gamenight.gay";
+         };
+       };
+    ```
 
 1. Apply the nix config `nixos-rebuild switch`
 1. Make sure new cert is copied to the mounted volume
 
-```sh
-mv /mnt/game-night-prod/certificates/acme /mnt/game-night-prod/certificates/acme.bak
-cp -R /var/lib/acme/ /mnt/game-night-prod/certificates/
-chown -R acme:acme /mnt/game-night-prod/certificates/acme
-```
+    ```sh
+    mv /mnt/game-night-prod/certificates/acme /mnt/game-night-prod/certificates/acme.bak
+    cp -R /var/lib/acme/ /mnt/game-night-prod/certificates/
+    chown -R acme:acme /mnt/game-night-prod/certificates/acme
+    ```
 
 1. Revert `/etc/nix/nginx.nix` to what's in the repoagain so we don't get rate limited and `nixos-rebuild switch`
 1. Test to verify cert is updated in the browser at <https://gamenight.gay>
