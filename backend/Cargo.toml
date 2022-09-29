@@ -26,7 +26,7 @@ serde_json = "1.0.85"
 sqlx = { version = "0.6.2", features = ["runtime-tokio-rustls", "macros", "migrate", "uuid", "time", "json", "tls", "offline", "postgres"] }
 thiserror = "1.0.36"
 time = { version = "0.3.14", features = ["serde"] } # time version kept in sync with sqlx
-tokio = { version = "1.21.1", features = ["full"] }
+tokio = { version = "1.21.2", features = ["full"] }
 tonic = { version = "0.6.2", features = ["tls", "tls-roots"] } # tonic kept in sync with tracing-opentelemetry
 tower = "0.4.13"
 tower-http = { version = "0.3.4", features = ["fs", "trace"] }
