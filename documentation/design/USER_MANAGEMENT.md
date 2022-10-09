@@ -84,6 +84,7 @@ erDiagram
         string address "not null"
         string general_location "not null"
         string instructions
+        int max_capacity
     }
     USERS ||--o{ BOARDGAMES : has
     USERS ||--o{ LOCATIONS : has

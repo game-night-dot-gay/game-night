@@ -6,8 +6,6 @@ The entrance to the event management portion of the website will be through navi
 
 * `My Events` -> `/my_events`
 
-
-
 ## API
 
 API endpoints are rooted at `/api`. All endpoints listed require an authenticated user. Access by an unauthenticated user will return a `401` response.
@@ -15,8 +13,10 @@ API endpoints are rooted at `/api`. All endpoints listed require an authenticate
 Endpoint                   | Methods          | Purpose
 ---------------------------|------------------|----------------------------------------------------------------------
 `/event/create`              | `POST`    | Add an event
-`/event/details`              | `GET`, `POST`    | Retrieve / update the general details about the event
+`/event/details`              | `GET`, `POST`    | Retrieve / update the general details about the
 
+event
+<!-- TODO MAKE THIS TABLE LOOK TERRIBLE -->
 
 ## Database Models
 
@@ -32,21 +32,26 @@ erDiagram
         timestamp start_time "not null"
         timestamp end_time "not null"
         enum food "bring, order"
-        enum games "bring, host_collection, list"
+        enum game_choice "host, attendees"
         uuid[] boardgame_keys FK
     }
-    RSVPS {
-        uuid rsvp_id PK
+    EVENT_BOARDGAME{
+        uuid reference_id PK
+        uuid boardgame_key FK
+        uuid event_key FK
+    }
+    RESERVATIONS {
+        uuid reservation_id PK
         uuid event_key FK
         uuid user_key FK
-        boolean attending
+        boolean going
         boolean bringing_games
         boolean bringing_food
         uuid[] boardgame_ids FK
-        string notes
+        string comments
     }
-    USERS ||--o{ EVENTS : has
-    EVENTS ||--o{ RSVPS : has
+    USERS  ||--o{ EVENTS : has
+    EVENTS ||--o{ RESERVATIONS : has
     EVENTS ||--o{ LOCATIONS : has
     EVENTS ||--o{ BOARDGAMES : has
 ```
