@@ -51,7 +51,6 @@ erDiagram
 
     USERS     ||--o{ EVENTS : has
     EVENTS    ||--o{ RESERVATIONS : has
-    EVENTS    ||--|| LOCATIONS : has
     LOCATIONS ||--o{ EVENTS : has
     EVENTS    ||--o{ EVENT_BOARDGAME : has
 ```
