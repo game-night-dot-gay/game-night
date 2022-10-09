@@ -15,8 +15,8 @@ config = { version = "0.13.2", default-features = false, features = ["toml"] }
 constant_time_eq = "0.2.4"
 eyre = "0.6.8"
 http = "0.2.8"
-opentelemetry = { version = "0.17.0", features = ["metrics", "serialize", "rt-tokio"] }
-opentelemetry-otlp = { version = "0.10.0", features = ["tonic", "metrics", "tls", "tls-roots"] }
+opentelemetry = { version = "0.18.0", features = ["metrics", "rt-tokio"] }
+opentelemetry-otlp = { version = "0.11.0", features = ["tonic", "metrics", "tls", "tls-roots"] }
 parking_lot = "0.12.1"
 rand = "0.8.5"
 rand_chacha = "0.3.1"
@@ -27,13 +27,13 @@ sqlx = { version = "0.6.2", features = ["runtime-tokio-rustls", "macros", "migra
 thiserror = "1.0.37"
 time = { version = "0.3.15", features = ["serde"] } # time version kept in sync with sqlx
 tokio = { version = "1.21.2", features = ["full"] }
-tonic = { version = "0.6.2", features = ["tls", "tls-roots"] } # tonic kept in sync with tracing-opentelemetry
+tonic = { version = "0.8.2", features = ["tls", "tls-roots"] } # tonic kept in sync with tracing-opentelemetry
 tower = "0.4.13"
 tower-http = { version = "0.3.4", features = ["fs", "trace"] }
 tracing = "0.1.37"
 tracing-futures = "0.2.5"
-tracing-opentelemetry = "0.17.4"
-tracing-subscriber = { version = "0.3.15", features = ["env-filter", "json"] }
+tracing-opentelemetry = "0.18.0"
+tracing-subscriber = { version = "0.3.16", features = ["env-filter", "json"] }
 urlencoding = "2.1.2"
-uuid = { version = "1.1.2", features = ["serde", "v4"] } # uuid version kept in sync with sqlx
+uuid = { version = "1.2.1", features = ["serde", "v4"] } # uuid version kept in sync with sqlx
 
