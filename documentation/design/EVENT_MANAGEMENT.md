@@ -16,7 +16,8 @@ Endpoint                   | Methods          | Purpose
 `/event/details`              | `GET`, `POST`    | Retrieve / update the general details about the
 
 event
-<!-- TODO MAKE THIS TABLE LOOK TERRIBLE -->
+<!-- TODO MAKE THIS TABLE LOOK TERRIBLE, add drawio to nix flake, render PNG to markdown
+Still make tables look terrible for Amy -->
 
 ## Database Models
 
@@ -28,11 +29,11 @@ erDiagram
         uuid location_key FK
         string display_name "not null"
         string description "not null"
-        enum status "draft, upcoming, past, cancelled"
+        enum status "draft, upcoming, past, cancelled" "not null"
         timestamp start_time "not null"
         timestamp end_time "not null"
-        enum food "bring, order"
-        enum game_choice "host, attendees"
+        enum food "bring, order" "not null"
+        enum game_choice "host, attendees" "not null"
     }
     EVENT_BOARDGAME{
         uuid reference_id PK
@@ -43,9 +44,9 @@ erDiagram
         uuid reservation_id PK
         uuid event_key FK
         uuid user_key FK
-        boolean going
-        boolean bringing_games
-        boolean bringing_food
+        enum going "yes, no, maybe" "not null"
+        boolean bringing_games "not null"
+        boolean bringing_food "not null"
         string comments
     }
 
