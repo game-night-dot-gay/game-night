@@ -33,7 +33,6 @@ erDiagram
         timestamp end_time "not null"
         enum food "bring, order"
         enum game_choice "host, attendees"
-        uuid[] boardgame_keys FK
     }
     EVENT_BOARDGAME{
         uuid reference_id PK
@@ -47,11 +46,12 @@ erDiagram
         boolean going
         boolean bringing_games
         boolean bringing_food
-        uuid[] boardgame_ids FK
         string comments
     }
-    USERS  ||--o{ EVENTS : has
-    EVENTS ||--o{ RESERVATIONS : has
-    EVENTS ||--o{ LOCATIONS : has
-    EVENTS ||--o{ BOARDGAMES : has
+
+    USERS     ||--o{ EVENTS : has
+    EVENTS    ||--o{ RESERVATIONS : has
+    EVENTS    ||--|| LOCATIONS : has
+    LOCATIONS ||--o{ EVENTS : has
+    EVENTS    ||--o{ EVENT_BOARDGAME : has
 ```
