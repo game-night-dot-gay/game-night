@@ -10,10 +10,14 @@ The entrance to the event management portion of the website will be through navi
 
 API endpoints are rooted at `/api`. All endpoints listed require an authenticated user. Access by an unauthenticated user will return a `401` response.
 
-Endpoint                   | Methods          | Purpose
----------------------------|------------------|----------------------------------------------------------------------
-`/event/create`              | `POST`    | Add an event
-`/event/details`              | `GET`, `POST`    | Retrieve / update the general details about the
+Endpoint                  | Methods                    | Purpose
+--------------------------|----------------------------|----------------------------------------------------------------------
+`/event`                  | `POST`                     | Add an event
+`/events`                 | `GET`                      | Retrieve events based on query parameters
+`/event/<id>`             | `GET`, `POST`, `DELETE`    | Retrieve / update the general details about an event
+`/user/events`            | `GET`                      | List a users events (may want parameter for active (default, !past/cancelled) or all events)
+`/user/reservations`      | `GET`                      | List a users reservations
+`/user/reservations/<id>` | `GET`, `POST`              | Retrieve / update a users reservation
 
 event
 <!-- TODO MAKE THIS TABLE LOOK TERRIBLE, add drawio to nix flake, render PNG to markdown
