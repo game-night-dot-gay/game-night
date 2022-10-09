@@ -62,13 +62,15 @@
         };
       };
 
-      defaultPackage = packages.game-night-docker;
+      packages.default = packages.game-night-docker;
 
 
       apps.game-night-backend = utils.lib.mkApp {
         drv = packages.game-night-backend;
         exePath = "/bin/game-night";
       };
+
+      apps.default = apps.game-night-backend;
 
       devShell = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
@@ -99,7 +101,6 @@
 
           # Nix
           nixpkgs-fmt
-
         ];
 
         RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
