@@ -5,7 +5,7 @@ edition = "2021"
 license-file = "LICENSE"
 
 [dependencies]
-ammonia = "3.2.1"
+ammonia = "3.3.0"
 askama = "0.11.1"
 async-trait = "0.1.59"
 axum = { version = "0.5.17", features = ["headers", "http2"] }
