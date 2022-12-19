@@ -24,7 +24,7 @@ sendgrid = { version = "0.18.1", default-features = false, features = ["async", 
 serde = "1.0.151"
 serde_json = "1.0.91"
 sqlx = { version = "0.6.2", features = ["runtime-tokio-rustls", "macros", "migrate", "uuid", "time", "json", "tls", "offline", "postgres"] }
-thiserror = "1.0.37"
+thiserror = "1.0.38"
 time = { version = "0.3.17", features = ["serde"] } # time version kept in sync with sqlx
 tokio = { version = "1.23.0", features = ["full"] }
 tonic = { version = "0.8.2", features = ["tls", "tls-roots"] } # tonic kept in sync with tracing-opentelemetry
