@@ -11,6 +11,7 @@ on:
     paths:
       - 'infra/terraform/**'
       - '.github/workflows/terraform.yml'
+      # Exclude the paths that trigger packer.yml
       - '!infra/images/**'
       - '!.github/workflows/packer.yml'
   workflow_dispatch:

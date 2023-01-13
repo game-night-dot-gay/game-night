@@ -11,6 +11,7 @@ on:
     paths:
       - '.github/workflows/nixos.yml'
       - 'infra/nixos/*'
+      # Exclude the paths that trigger packer.yml, terraform.yml
       - '!infra/terraform/**'
       - '!.github/workflows/terraform.yml'
       - '!infra/images/**'
