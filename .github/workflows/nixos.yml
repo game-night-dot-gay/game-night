@@ -62,6 +62,16 @@ jobs:
           set -x
           ls -la /tmp/nixos
           ls -la /etc/nixos
+
+          mv -f /tmp/nixos/configuration.nix /etc/nixos/configuration.nix
+          mv -f /tmp/nixos/nginx-prod.nix /etc/nixos/nginx.nix
+          mv -f /tmp/nixos/users.nix /etc/nixos/users.nix
+
+          sudo nix-channel --update
+          sudo nixos-rebuild switch
+          sudo nix-env --upgrade --always
+          sudo rm -f /nix/var/nix/gcroots/auto/*
+          sudo nix-collect-garbage -d
         "
 
       env:
