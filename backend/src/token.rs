@@ -1,10 +1,11 @@
 use axum::headers::{HeaderMap, HeaderValue};
+use base64::engine::{general_purpose::URL_SAFE, Engine};
 use parking_lot::Mutex;
 use rand::{Rng, SeedableRng};
 use thiserror::Error;
 
 const TOKEN_SIZE: usize = 32; // tokens should be 32 bytes long
-pub const TOKEN_COOKIE: &'static str = "game-night-session";
+pub const TOKEN_COOKIE: &str = "game-night-session";
 
 pub struct Token([u8; TOKEN_SIZE]);
 
@@ -14,11 +15,12 @@ impl Token {
     }
 
     pub fn as_base64(&self) -> String {
-        base64::encode(self.0)
+        URL_SAFE.encode(self.0)
     }
 
     pub fn from_base64(encoded: impl AsRef<str>) -> Result<Self, InvalidTokenError> {
-        let token = base64::decode(encoded.as_ref())?
+        let token = URL_SAFE
+            .decode(encoded.as_ref())?
             .try_into()
             .map_err(|invalid: Vec<u8>| InvalidTokenError::InvalidTokenLength(invalid.len()))?;
 
