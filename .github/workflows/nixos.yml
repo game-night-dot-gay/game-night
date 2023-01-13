@@ -40,6 +40,7 @@ jobs:
         nix develop --command nixpkgs-fmt --check infra/nixos/*
       
   deploy-config:
+    if: github.ref == 'refs/heads/main'
     name: Deploy Config
     runs-on: ubuntu-latest
     steps:
