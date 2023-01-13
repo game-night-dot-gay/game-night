@@ -51,6 +51,10 @@ jobs:
           StrictHostKeyChecking no
         END
 
+        ssh prod "
+          mkdir -p /tmp/nixos
+        "
+
         scp ./infra/nixos/* prod:/tmp/nixos/
 
         ssh prod "
