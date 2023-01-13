@@ -52,14 +52,18 @@ jobs:
         END
 
         ssh prod "
+          set -x
           mkdir -p /tmp/nixos
+          set +x
         "
 
-        scp ./infra/nixos/* prod:/tmp/nixos/
+        scp -v ./infra/nixos/* prod:/tmp/nixos/
 
         ssh prod "
+          set -x
           ls -la /tmp/nixos
           ls -la /etc/nixos
+          set +x
         "
 
       env:
