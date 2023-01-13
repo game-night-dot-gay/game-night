@@ -11,6 +11,8 @@ on:
     paths:
       - infra/images/**
       - .github/workflows/packer.yml
+  workflow_dispatch:
+    branches: [main]
 
 jobs:
   packer:
@@ -28,24 +30,26 @@ jobs:
       uses: hashicorp/packer-github-actions@master
       with:
         command: init
-        working_directory: infra/images/podman-prod
+        arguments: -upgrade
+        target: infra/images/podman-prod/
+        working_directory: "."
 
     - name: Validate Packer Templates
       uses: hashicorp/packer-github-actions@master
       with:
-        command: validate
+        command: validate 
         arguments: -syntax-only
-        target: .
-        working_directory: infra/images/podman-prod
+        target: infra/images/podman-prod/
+        working_directory: "."
 
     - name: "Build Image: podman-prod"
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       uses: hashicorp/packer-github-actions@master
       with:
         command: build
-        arguments: "-color=false -on-error=abort"
-        target: "."
-        working_directory: infra/images/podman-prod
+        arguments: -color=false -on-error=abort
+        target: infra/images/podman-prod/
+        working_directory: "."
       env:
         PACKER_LOG: 1
         PKR_VAR_do_token: ${{ secrets.DO_TOKEN }}

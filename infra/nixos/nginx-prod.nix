@@ -10,11 +10,11 @@
     isSystemUser = true;
   };
 
+  users.users.acme.group = "acme";
+
   users.groups = {
     acme = { gid = 995; };
   };
-
-  users.users.acme.group = "acme";
 
   # Workaround so the Let's Encrypt cert gets stored on the network
   fileSystems."/var/lib/acme" = {
