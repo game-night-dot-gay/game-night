@@ -39,6 +39,9 @@ jobs:
 
     - name: Check flake format
       run: nix develop --command nixpkgs-fmt --check flake.nix
+
+    - name: Check backend format
+      run: nix develop --command cargo fmt --check --manifest-path backend/Cargo.toml
     
     - name: Build Backend
       run: nix build .#game-night-backend
