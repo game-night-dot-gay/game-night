@@ -67,9 +67,9 @@ jobs:
           ls -la /tmp/nixos
           ls -la /etc/nixos
 
-          mv -f /tmp/nixos/configuration.nix /etc/nixos/configuration.nix
-          mv -f /tmp/nixos/nginx-prod.nix /etc/nixos/nginx.nix
-          mv -f /tmp/nixos/users.nix /etc/nixos/users.nix
+          sudo mv -f /tmp/nixos/configuration.nix /etc/nixos/configuration.nix
+          sudo mv -f /tmp/nixos/nginx-prod.nix /etc/nixos/nginx.nix
+          sudo mv -f /tmp/nixos/users.nix /etc/nixos/users.nix
 
           sudo nix-channel --update
           sudo nixos-rebuild switch
