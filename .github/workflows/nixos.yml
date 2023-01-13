@@ -1,6 +1,10 @@
 name: "NixOS"
 
 on:
+  pull_request:
+    paths:
+      - .github/workflows/nixos.yml
+      - infra/nixos/*
   push:
     branches:
       - 'main'
@@ -32,7 +36,8 @@ jobs:
 
     - name: Deploy Nixos Configuration
       # Reference: https://blog.benoitblanchon.fr/github-action-run-ssh-commands/
-      if: github.ref == 'refs/heads/main'
+      # TODO: Remove comment before merge
+      # if: github.ref == 'refs/heads/main'
       run: |
         # Setup SSH
         mkdir -p ~/.ssh/
