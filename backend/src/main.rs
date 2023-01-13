@@ -1,6 +1,6 @@
 use axum::{
     extract::Extension,
-    http::StatusCode,
+    http::{StatusCode, Uri},
     response::IntoResponse,
     routing::{get, get_service, post},
     Router,
@@ -76,11 +76,13 @@ async fn main() -> color_eyre::Result<()> {
     let auth_routes = Router::new()
         .route("/request_login", post(request_login_endpoint))
         .route("/login", get(login_endpoint))
-        .route("/logout", get(logout_endpoint));
+        .route("/logout", get(logout_endpoint))
+        .fallback(api_fallback);
 
     let api_routes = Router::new()
         .route("/current_user", get(current_user_endpoint))
-        .route("/users", get(users_endpoint));
+        .route("/users", get(users_endpoint))
+        .fallback(api_fallback);
 
     let frontend_service =
         ServeDir::new(&frontend_dir).fallback(ServeFile::new(format!("{frontend_dir}/index.html")));
@@ -88,7 +90,7 @@ async fn main() -> color_eyre::Result<()> {
     let app = Router::new()
         .nest("/api", api_routes)
         .nest("/auth", auth_routes)
-        .fallback(get_service(frontend_service).handle_error(handle_error))
+        .fallback_service(get_service(frontend_service).handle_error(handle_error))
         .layer(Extension(config))
         .layer(Extension(pool))
         .layer(Extension(email_sender))
@@ -101,6 +103,10 @@ async fn main() -> color_eyre::Result<()> {
         .await?;
 
     Ok(())
+}
+
+async fn api_fallback(uri: Uri) -> (StatusCode, String) {
+    (StatusCode::NOT_FOUND, format!("No route for {}", uri))
 }
 
 async fn handle_error(err: io::Error) -> impl IntoResponse {

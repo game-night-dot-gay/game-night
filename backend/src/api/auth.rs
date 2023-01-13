@@ -1,8 +1,8 @@
 use axum::{
     async_trait,
-    extract::{self, Extension, FromRequest, Query, RequestParts},
+    extract::{self, Extension, FromRequestParts, Query},
     headers::Cookie,
-    http::StatusCode,
+    http::{request::Parts, StatusCode},
     response::{self, IntoResponse},
     TypedHeader,
 };
@@ -138,14 +138,14 @@ pub struct AuthenticatedUser {
 }
 
 #[async_trait]
-impl<B> FromRequest<B> for AuthenticatedUser
+impl<S> FromRequestParts<S> for AuthenticatedUser
 where
-    B: Send,
+    S: Send + Sync,
 {
     type Rejection = StatusCode;
 
-    async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let cookie = Option::<TypedHeader<Cookie>>::from_request(req)
+    async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
+        let cookie = Option::<TypedHeader<Cookie>>::from_request_parts(parts, state)
             .await
             .map_err(|e| {
                 tracing::error!("Failed to get cookie header: {e}");
@@ -162,8 +162,9 @@ where
                 StatusCode::UNAUTHORIZED
             })?;
 
-            let Extension(pool): Extension<PgPool> =
-                Extension::from_request(req).await.map_err(|e| {
+            let Extension(pool): Extension<PgPool> = Extension::from_request_parts(parts, state)
+                .await
+                .map_err(|e| {
                     tracing::error!("Could not get the postgres pool: {e}");
                     StatusCode::INTERNAL_SERVER_ERROR
                 })?;
@@ -188,7 +189,7 @@ where
 
             Ok(Self { user, session })
         } else {
-            tracing::error!("No cookie present for request {}", req.uri());
+            tracing::error!("No cookie present for request {}", parts.uri);
             Err(StatusCode::UNAUTHORIZED)
         }
     }

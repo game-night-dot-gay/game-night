@@ -76,8 +76,8 @@
 
         apps.default = apps.game-night-backend;
 
-        devShell = pkgs.mkShell {
-          nativeBuildInputs = with pkgs; [
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
             # General
             just
 
@@ -90,6 +90,7 @@
             rustfmt
             rust-analyzer
             sqlx-cli
+
             # Build Dependencies
             grpc-tools
 
