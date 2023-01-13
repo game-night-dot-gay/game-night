@@ -98,6 +98,18 @@
     },
     "query": "SELECT * FROM users"
   },
+  "3a4c2ce9fcdf894c04863246361a39b326d35fb263b75b1382ae68edda33b768": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Text"
+        ]
+      }
+    },
+    "query": "UPDATE sessions SET expires = DEFAULT WHERE session_token = $1"
+  },
   "476f6a7d2a64ea7c73bb5a00fc05add29ddf4f8857b9acce6316f48d7fcecbab": {
     "describe": {
       "columns": [

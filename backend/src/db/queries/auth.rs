@@ -93,6 +93,22 @@ pub async fn session_for_token(pool: &PgPool, token: &Token) -> Result<Session, 
     Ok(new_session)
 }
 
+/// Refresh session
+pub async fn refresh_session(pool: &PgPool, token: &Token) -> Result<(), ApiError> {
+    let session_token = token.as_base64();
+
+    sqlx::query_as!(
+        PendingLogin,
+        "UPDATE sessions SET expires = DEFAULT WHERE session_token = $1",
+        session_token
+    )
+    .execute(pool)
+    .await
+    .map_err(crate::api::error::ApiError::from)?;
+
+    Ok(())
+}
+
 /// Delete session
 #[instrument(skip(token))]
 pub async fn delete_session(pool: &PgPool, token: &Token) -> Result<(), ApiError> {

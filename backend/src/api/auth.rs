@@ -16,7 +16,7 @@ use tracing::instrument;
 use crate::db::{
     models::auth::Session,
     queries::{
-        auth::{delete_session, session_for_token},
+        auth::{delete_session, refresh_session, session_for_token},
         user::{self, user_by_id},
     },
 };
@@ -96,7 +96,7 @@ pub async fn login_endpoint(
     if now.cmp(&pending_login.expires) == Ordering::Greater {
         tracing::debug!("Pending login expired for {}", pending_login.user_key);
         return Err(ApiError {
-            message: format!("Pending login expired"),
+            message: "Pending login expired".to_string(),
         }
         .into());
     }
@@ -106,7 +106,7 @@ pub async fn login_endpoint(
 
     let session_token = Token::from_base64(session.session_token).map_err(ApiError::from)?;
 
-    let redirect_url = login_query.redirect_url.unwrap_or("/".to_string());
+    let redirect_url = login_query.redirect_url.unwrap_or_else(|| "/".to_string());
     let mut redirect = response::Redirect::to(&redirect_url).into_response();
     session_token
         .set_cookie(redirect.headers_mut())
@@ -179,7 +179,10 @@ where
                 tracing::debug!("Session expired for {}", session.user_key);
                 return Err(StatusCode::UNAUTHORIZED);
             } else {
-                // TODO: extend session?
+                refresh_session(&pool, &token).await.map_err(|e| {
+                    tracing::error!("Failed to refresh session: {}", e.message);
+                    StatusCode::INTERNAL_SERVER_ERROR
+                })?;
             }
 
             let user = user_by_id(&pool, &session.user_key).await.map_err(|e| {
