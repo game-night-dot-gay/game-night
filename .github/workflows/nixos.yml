@@ -57,7 +57,7 @@ jobs:
           set +x
         "
 
-        scp -v ./infra/nixos/* prod:/tmp/nixos/
+        scp ./infra/nixos/* prod:/tmp/nixos/
 
         ssh prod "
           set -x
