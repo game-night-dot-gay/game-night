@@ -39,13 +39,6 @@ jobs:
       run: |
         nix develop --command nixpkgs-fmt --check infra/nixos/*
       
-  deploy-config:
-    if: github.ref == 'refs/heads/main'
-    name: Deploy Config
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-
     - name: Deploy Nixos Configuration
       # Reference: https://blog.benoitblanchon.fr/github-action-run-ssh-commands/
       if: github.ref == 'refs/heads/main'
