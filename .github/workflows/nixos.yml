@@ -51,6 +51,8 @@ jobs:
           StrictHostKeyChecking no
         END
 
+        scp ./infra/nixos/* prod:/tmp/nixos/
+
         ssh prod "
           ls -la /tmp/nixos
           ls -la /etc/nixos
