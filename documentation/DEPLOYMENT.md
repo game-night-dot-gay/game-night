@@ -11,8 +11,10 @@ The workflow sequence for files under `.github/workflows` is as follows:
 
 ## Flow
 
+``` mermaid
 graph TD
     A[Packer.yml] -->|Build and Deploy Image| B[Terraform.yml]
     B -->|Provision DigitalOcean Infrastructure| C[Nixos.yml]
     C -->|Configure NixOS on Prod Instance| D[Application.yml]
     D -->|Deploy Application Code| E[Deployment Complete!]
+```
