@@ -3,14 +3,18 @@ name: "NixOS"
 on:
   pull_request:
     paths:
-      - .github/workflows/nixos.yml
-      - infra/nixos/*
+      - '.github/workflows/nixos.yml'
+      - 'infra/nixos/*'
   push:
     branches:
       - 'main'
     paths:
-      - .github/workflows/nixos.yml
-      - infra/nixos/*
+      - '.github/workflows/nixos.yml'
+      - 'infra/nixos/*'
+      - '!infra/terraform/**'
+      - '!.github/workflows/terraform.yml'
+      - '!infra/images/**'
+      - '!.github/workflows/packer.yml'
   workflow_dispatch:
     branches: [main]
   workflow_run:
