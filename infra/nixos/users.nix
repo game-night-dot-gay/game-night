@@ -3,11 +3,11 @@
 {
 
   # So we can blow away any set passwords
-  users.mutableUsers = false; 
-  
+  users.mutableUsers = false;
+
   # Disables root login with password
   users.users.root.hashedPassword = "!";
-  
+
   users.users.allie = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "podman" ];
@@ -51,36 +51,44 @@
 
   # Allow specific sudo commands without password
   security.sudo.extraRules = [
-    { users = [ "automation" ]; 
-      commands = [ { 
-        command = "podman"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "mount"; 
-        options = [ "NOPASSWD" ]; } 
-        { 
-        command = "tee"; 
-        options = [ "NOPASSWD" ]; } 
-        { 
-        command = "nixos-rebuild"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "nix-channel"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "nix-env"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "rm -f /nix/var/nix/gcroots/auto/*"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "nix-collect-garbage"; 
-        options = [ "NOPASSWD" ]; }
-        { 
-        command = "sed"; 
-        options = [ "NOPASSWD" ]; }
-
-      ]; 
+    {
+      users = [ "automation" ];
+      commands = [{
+        command = "podman";
+        options = [ "NOPASSWD" ];
+      }
+        {
+          command = "mount";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "tee";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "nixos-rebuild";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "nix-channel";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "nix-env";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "rm -f /nix/var/nix/gcroots/auto/*";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "nix-collect-garbage";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "sed";
+          options = [ "NOPASSWD" ];
+        }];
     }
   ];
 

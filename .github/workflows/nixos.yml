@@ -19,25 +19,22 @@ on:
     branches: [main]
 
 jobs:
+  tests:
+    name: CI Tests
+    steps:
+    - name: Check Nix format
+      run: |
+      nix develop --command nixpkgs-fmt --check infra/nixos/*
+      
   deploy-config:
     name: Deploy Config
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
 
-    # TODO
-    #  - If not a workflow_run:
-    #    - Git diff from last commit to see what files changed if any
-    #    - Compare timestamp between remote and local files
-    #
-    #  - SCP new files to /tmp/nixos
-    #  - mv files to /etc/nixos
-    #  - run nix-rebuild switch
-
     - name: Deploy Nixos Configuration
       # Reference: https://blog.benoitblanchon.fr/github-action-run-ssh-commands/
-      # TODO: Remove comment before merge
-      # if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main'
       run: |
         # Setup SSH
         mkdir -p ~/.ssh/

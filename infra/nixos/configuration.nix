@@ -6,7 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
 
       # Nginx and certificate
@@ -30,7 +31,7 @@
   networking.useDHCP = false;
   networking.interfaces.ens3.useDHCP = true; # Digital Ocean NIC 1
   networking.interfaces.ens4.useDHCP = true; # Digital OCean NIC 2
- 
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -46,8 +47,8 @@
 
   virtualisation = {
     podman = {
-     enable = true;
-     dockerCompat = true;
+      enable = true;
+      dockerCompat = true;
     };
   };
 

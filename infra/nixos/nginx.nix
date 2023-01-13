@@ -18,5 +18,5 @@
   users.groups = {
     acme = { gid = 995; };
   };
-  
+
 }
