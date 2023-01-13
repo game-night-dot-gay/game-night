@@ -38,7 +38,7 @@ jobs:
     - name: Check Nix format
       run: |
         nix develop --command nixpkgs-fmt --check infra/nixos/*
-
+      
   deploy-config:
     name: Deploy Config
     runs-on: ubuntu-latest
