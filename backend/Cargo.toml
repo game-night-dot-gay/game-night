@@ -8,7 +8,7 @@ license-file = "LICENSE"
 ammonia = "3.3.0"
 askama = "0.11.1"
 async-trait = "0.1.61"
-axum = { version = "0.6.2", features = ["headers", "http2"] }
+axum = { version = "0.6.6", features = ["headers", "http2"] }
 base64 = "0.21.0"
 color-eyre = "0.6.2"
 config = { version = "0.13.3", default-features = false, features = ["toml"] }
