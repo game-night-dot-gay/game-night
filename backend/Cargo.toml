@@ -7,7 +7,7 @@ license-file = "LICENSE"
 [dependencies]
 ammonia = "3.3.0"
 askama = "0.11.1"
-async-trait = "0.1.61"
+async-trait = "0.1.68"
 axum = { version = "0.6.2", features = ["headers", "http2"] }
 base64 = "0.21.0"
 color-eyre = "0.6.2"
