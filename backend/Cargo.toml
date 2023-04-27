@@ -6,13 +6,13 @@ license-file = "LICENSE"
 
 [dependencies]
 ammonia = "3.3.0"
-askama = "0.11.1"
-async-trait = "0.1.61"
-axum = { version = "0.6.7", features = ["headers", "http2"] }
+askama = "0.12.0"
+async-trait = "0.1.68"
+axum = { version = "0.6.17", features = ["headers", "http2"] }
 base64 = "0.21.0"
 color-eyre = "0.6.2"
 config = { version = "0.13.3", default-features = false, features = ["toml"] }
-constant_time_eq = "0.2.4"
+constant_time_eq = "0.2.5"
 eyre = "0.6.8"
 http = "0.2.8"
 opentelemetry = { version = "0.18.0", features = ["trace", "metrics", "rt-tokio"] }
@@ -21,19 +21,19 @@ parking_lot = "0.12.1"
 rand = "0.8.5"
 rand_chacha = "0.3.1"
 sendgrid = { version = "0.18.1", default-features = false, features = ["async", "rustls"] }
-serde = "1.0.152"
-serde_json = "1.0.91"
-sqlx = { version = "0.6.2", features = ["runtime-tokio-rustls", "macros", "migrate", "uuid", "time", "json", "tls", "offline", "postgres"] }
-thiserror = "1.0.38"
-time = { version = "0.3.17", features = ["serde"] } # time version kept in sync with sqlx
+serde = "1.0.160"
+serde_json = "1.0.96"
+sqlx = { version = "0.6.3", features = ["runtime-tokio-rustls", "macros", "migrate", "uuid", "time", "json", "tls", "offline", "postgres"] }
+thiserror = "1.0.40"
+time = { version = "0.3.20", features = ["serde"] } # time version kept in sync with sqlx
 tokio = { version = "1.24.1", features = ["full"] }
 tonic = { version = "0.8.3", features = ["tls", "tls-roots"] } # tonic kept in sync with tracing-opentelemetry
 tower = "0.4.13"
 tower-http = { version = "0.3.5", features = ["fs", "trace"] }
-tracing = "0.1.37"
+tracing = "0.1.38"
 tracing-futures = "0.2.5"
 tracing-opentelemetry = "0.18.0"
-tracing-subscriber = { version = "0.3.16", features = ["env-filter", "json"] }
+tracing-subscriber = { version = "0.3.17", features = ["env-filter", "json"] }
 urlencoding = "2.1.2"
 uuid = { version = "1.3.1", features = ["serde", "v4"] } # uuid version kept in sync with sqlx
 
