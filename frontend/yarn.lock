@@ -1343,7 +1343,7 @@
   dependencies:
     "@types/node" "*"
 
-"@typescript-eslint/eslint-plugin@^5.0.0", "@typescript-eslint/eslint-plugin@^5.59.2":
+"@typescript-eslint/eslint-plugin@^5.59.1", "@typescript-eslint/eslint-plugin@^5.59.2":
   version "5.59.2"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-5.59.2.tgz#684a2ce7182f3b4dac342eef7caa1c2bae476abd"
   integrity sha512-yVrXupeHjRxLDcPKL10sGQ/QlVrA8J5IYOEWVqk0lJaSZP7X5DfnP7Ns3cc74/blmbipQ1htFNVGsHX6wsYm0A==
@@ -1359,7 +1359,7 @@
     semver "^7.3.7"
     tsutils "^3.21.0"
 
-"@typescript-eslint/parser@^5.0.0", "@typescript-eslint/parser@^5.59.2":
+"@typescript-eslint/parser@^5.59.1", "@typescript-eslint/parser@^5.59.2":
   version "5.59.2"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-5.59.2.tgz#c2c443247901d95865b9f77332d9eee7c55655e8"
   integrity sha512-uq0sKyw6ao1iFOZZGk9F8Nro/8+gfB5ezl1cA06SrqbgJAt0SRoFhb9pXaHvkrxUpZaoLxt8KlovHNk8Gp6/HQ==
@@ -1756,14 +1756,14 @@
   resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.4.5.tgz#d54e844c1adbb1e677c81c665ecef1a2b4bb8380"
   integrity sha512-JD5fcdIuFxU4fQyXUu3w2KpAJHzTVdN+p4iOX2lMWSHMOoQdMAcpFLZzm9Z/2nmsoZ1a96QEhZ26e50xLBsgOQ==
 
-"@vue/eslint-config-typescript@^11.0.2":
-  version "11.0.2"
-  resolved "https://registry.yarnpkg.com/@vue/eslint-config-typescript/-/eslint-config-typescript-11.0.2.tgz#03353f404d4472900794e653450bb6623de3c642"
-  integrity sha512-EiKud1NqlWmSapBFkeSrE994qpKx7/27uCGnhdqzllYDpQZroyX/O6bwjEpeuyKamvLbsGdO6PMR2faIf+zFnw==
+"@vue/eslint-config-typescript@^11.0.3":
+  version "11.0.3"
+  resolved "https://registry.yarnpkg.com/@vue/eslint-config-typescript/-/eslint-config-typescript-11.0.3.tgz#c720efa657d102cd2945bc54b4a79f35d57f6307"
+  integrity sha512-dkt6W0PX6H/4Xuxg/BlFj5xHvksjpSlVjtkQCpaYJBIEuKj2hOVU7r+TIe+ysCwRYFz/lGqvklntRkCAibsbPw==
   dependencies:
-    "@typescript-eslint/eslint-plugin" "^5.0.0"
-    "@typescript-eslint/parser" "^5.0.0"
-    vue-eslint-parser "^9.0.0"
+    "@typescript-eslint/eslint-plugin" "^5.59.1"
+    "@typescript-eslint/parser" "^5.59.1"
+    vue-eslint-parser "^9.1.1"
 
 "@vue/reactivity-transform@3.2.47":
   version "3.2.47"
@@ -6376,10 +6376,10 @@ vary@~1.1.2:
   resolved "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-vue-eslint-parser@^9.0.0, vue-eslint-parser@^9.0.1:
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-9.1.0.tgz#0e121d1bb29bd10763c83e3cc583ee03434a9dd5"
-  integrity sha512-NGn/iQy8/Wb7RrRa4aRkokyCZfOUWk19OP5HP6JEozQFX5AoS/t+Z0ZN7FY4LlmWc4FNI922V7cvX28zctN8dQ==
+vue-eslint-parser@^9.0.1, vue-eslint-parser@^9.1.1:
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-9.2.0.tgz#b397a7afae29961e5c59d80e895ab54a2e7f2f41"
+  integrity sha512-aFXipsUbKU4TzgP9OU6cXIm2Nnp9ryKJc2mzY0s2xzwfjHg6WDT33LUAQRGR9K0NFncBgUEZ2njdrS3Lj/sOLw==
   dependencies:
     debug "^4.3.4"
     eslint-scope "^7.1.1"
