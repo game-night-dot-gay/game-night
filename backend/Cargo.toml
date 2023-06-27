@@ -16,7 +16,7 @@ constant_time_eq = "0.2.5"
 eyre = "0.6.8"
 http = "0.2.8"
 opentelemetry = { version = "0.18.0", features = ["trace", "metrics", "rt-tokio"] }
-opentelemetry-otlp = { version = "0.11.0", features = ["tonic", "tls", "tls-roots"] }
+opentelemetry-otlp = { version = "0.12.0", features = ["tonic", "tls", "tls-roots"] }
 parking_lot = "0.12.1"
 rand = "0.8.5"
 rand_chacha = "0.3.1"
