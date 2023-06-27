@@ -29,7 +29,7 @@ time = { version = "0.3.21", features = ["serde"] } # time version kept in sync 
 tokio = { version = "1.24.1", features = ["full"] }
 tonic = { version = "0.8.3", features = ["tls", "tls-roots"] } # tonic kept in sync with tracing-opentelemetry
 tower = "0.4.13"
-tower-http = { version = "0.3.5", features = ["fs", "trace"] }
+tower-http = { version = "0.4.1", features = ["fs", "trace"] }
 tracing = "0.1.38"
 tracing-futures = "0.2.5"
 tracing-opentelemetry = "0.18.0"
