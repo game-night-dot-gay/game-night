@@ -15,6 +15,13 @@ on:
       - flake.*
       - backend/**
       - frontend/**
+      # Exclude the paths that trigger packer.yml, terraform.yml, nixos.yml
+      - '!.github/workflows/nixos.yml'
+      - '!infra/nixos/*'
+      - '!infra/terraform/**'
+      - '!.github/workflows/terraform.yml'
+      - '!infra/images/**'
+      - '!.github/workflows/packer.yml'
   workflow_dispatch:
     branches: [main]
   workflow_run:

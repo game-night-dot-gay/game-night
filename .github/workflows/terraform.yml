@@ -3,14 +3,17 @@ name: "Terraform"
 on:
   pull_request:
     paths:
-      - infra/terraform/**
-      - .github/workflows/terraform.yml
+      - 'infra/terraform/**'
+      - '.github/workflows/terraform.yml'
   push:
     branches:
       - 'main'
     paths:
-      - infra/terraform/**
-      - .github/workflows/terraform.yml
+      - 'infra/terraform/**'
+      - '.github/workflows/terraform.yml'
+      # Exclude the paths that trigger packer.yml
+      - '!infra/images/**'
+      - '!.github/workflows/packer.yml'
   workflow_dispatch:
     branches: [main]
   workflow_run:

@@ -3,14 +3,19 @@ name: "NixOS"
 on:
   pull_request:
     paths:
-      - .github/workflows/nixos.yml
-      - infra/nixos/*
+      - '.github/workflows/nixos.yml'
+      - 'infra/nixos/*'
   push:
     branches:
       - 'main'
     paths:
-      - .github/workflows/nixos.yml
-      - infra/nixos/*
+      - '.github/workflows/nixos.yml'
+      - 'infra/nixos/*'
+      # Exclude the paths that trigger packer.yml, terraform.yml
+      - '!infra/terraform/**'
+      - '!.github/workflows/terraform.yml'
+      - '!infra/images/**'
+      - '!.github/workflows/packer.yml'
   workflow_dispatch:
     branches: [main]
   workflow_run:
@@ -61,9 +66,9 @@ jobs:
           ls -la /tmp/nixos
           ls -la /etc/nixos
 
-          mv -f /tmp/nixos/configuration.nix /etc/nixos/configuration.nix
-          mv -f /tmp/nixos/nginx-prod.nix /etc/nixos/nginx.nix
-          mv -f /tmp/nixos/users.nix /etc/nixos/users.nix
+          sudo mv -f /tmp/nixos/configuration.nix /etc/nixos/configuration.nix
+          sudo mv -f /tmp/nixos/nginx-prod.nix /etc/nixos/nginx.nix
+          sudo mv -f /tmp/nixos/users.nix /etc/nixos/users.nix
 
           sudo nix-channel --update
           sudo nixos-rebuild switch

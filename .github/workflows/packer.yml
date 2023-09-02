@@ -3,14 +3,14 @@ name: "Packer"
 on:
   pull_request:
     paths:
-      - infra/images/**
-      - .github/workflows/packer.yml
+      - 'infra/images/**'
+      - '.github/workflows/packer.yml'
   push:
     branches:
       - 'main'
     paths:
-      - infra/images/**
-      - .github/workflows/packer.yml
+      - 'infra/images/**'
+      - '.github/workflows/packer.yml'
   workflow_dispatch:
     branches: [main]
 
