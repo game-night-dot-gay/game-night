@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     # Note: Hasicorp action does not support `packer fmt -check` yet >_<
     - name: Check Packer Formatting
