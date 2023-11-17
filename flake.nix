@@ -33,7 +33,17 @@
 
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
 
-        src = craneLib.cleanCargoSource (craneLib.path ./backend);
+        sqlFilter = path: _type: builtins.match ".*sql$" path != null;
+        sqlxFilter = path: _type: builtins.match ".*sqlx-data.json$" path != null;
+        templatesFilter = path: _type: builtins.match ".*html" path != null;
+
+        srcFilter = path: type:
+          (sqlFilter path type) || (sqlxFilter path type) || (templatesFilter path type) || (craneLib.filterCargoSources path type);
+
+        src = pkgs.lib.cleanSourceWith {
+          src = craneLib.path ./backend;
+          filter = srcFilter;
+        };
 
         commonArgs = {
           inherit src;
