@@ -2,23 +2,83 @@
   description = "Game Night";
 
   inputs = {
-    utils.url = "github:numtide/flake-utils";
-    naersk.url = "github:nmattia/naersk";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+
+    crane = {
+      url = "github:ipetkov/crane";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
-  outputs = { self, nixpkgs, utils, naersk }:
-    utils.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs, flake-utils, crane, rust-overlay, ... }:
+    flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages."${system}";
-        naersk-lib = naersk.lib."${system}";
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ (import rust-overlay) ];
+        };
+
+        rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+          extensions = [ "rust-analyzer" "rust-src" ];
+        };
+
+        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+
+        sqlFilter = path: _type: builtins.match ".*sql$" path != null;
+        sqlxFilter = path: _type: builtins.match ".*sqlx-data.json$" path != null;
+        templatesFilter = path: _type: builtins.match ".*html" path != null;
+
+        srcFilter = path: type:
+          (sqlFilter path type) || (sqlxFilter path type) || (templatesFilter path type) || (craneLib.filterCargoSources path type);
+
+        src = pkgs.lib.cleanSourceWith {
+          src = craneLib.path ./backend;
+          filter = srcFilter;
+        };
+
+        commonArgs = {
+          inherit src;
+
+          pname = "game-night-backend";
+          version = "0.1.0";
+
+          nativeBuildInputs = [ pkgs.grpc-tools ];
+        };
+
+        cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+
+        game-night-backend = craneLib.buildPackage (commonArgs // {
+          inherit cargoArtifacts;
+        });
+
       in
       rec {
-        packages.game-night-backend = naersk-lib.buildPackage {
-          pname = "game-night-backend";
-          root = ./backend;
-          nativeBuildInputs = [ pkgs.grpc-tools ];
-          doCheck = true;
+        checks = {
+          inherit game-night-backend;
+
+          clippy = craneLib.cargoClippy (commonArgs // {
+            inherit cargoArtifacts;
+          });
+
+          doc = craneLib.cargoDoc (commonArgs // {
+            inherit cargoArtifacts;
+          });
+
+          fmt = craneLib.cargoFmt (commonArgs // {
+            inherit src;
+          });
         };
+
+        packages.game-night-backend = game-night-backend;
 
         packages.game-night-frontend = pkgs.mkYarnPackage {
           pname = "game-night-frontend";
@@ -69,7 +129,7 @@
         packages.default = packages.game-night-docker;
 
 
-        apps.game-night-backend = utils.lib.mkApp {
+        apps.game-night-backend = flake-utils.lib.mkApp {
           drv = packages.game-night-backend;
           exePath = "/bin/game-night";
         };
@@ -82,13 +142,9 @@
             just
 
             # Rust / Backend
-            cargo
+            rustToolchain
             cargo-edit
             cargo-outdated
-            clippy
-            rustc
-            rustfmt
-            rust-analyzer
             sqlx-cli
 
             # Build Dependencies
@@ -104,11 +160,12 @@
             tfswitch
             packer
 
+            # GitHub tooling
+            gh
+
             # Nix
             nixpkgs-fmt
           ];
-
-          RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
         };
       });
 }
