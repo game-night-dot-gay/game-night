@@ -22,7 +22,7 @@ rand = "0.8.5"
 rand_chacha = "0.3.1"
 sendgrid = { version = "0.19.2", default-features = false, features = ["async", "rustls"] }
 serde = "1.0.164"
-serde_json = "1.0.96"
+serde_json = "1.0.109"
 sqlx = { version = "0.6.3", features = ["runtime-tokio-rustls", "macros", "migrate", "uuid", "time", "json", "tls", "offline", "postgres"] }
 thiserror = "1.0.51"
 time = { version = "0.3.31", features = ["serde"] } # time version kept in sync with sqlx
