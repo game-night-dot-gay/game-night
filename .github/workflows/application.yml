@@ -27,7 +27,7 @@ jobs:
     name: CI Tests
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install Nix
       uses: DeterminateSystems/nix-installer-action@v10
     - name: Run the Magic Nix Cache
